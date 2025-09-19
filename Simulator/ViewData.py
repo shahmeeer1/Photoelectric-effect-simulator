@@ -39,12 +39,12 @@ class ViewData:
     _instance = None  # Check if an instance of this class already exists
 
     # Singleton pattern initialiser
-    def __new__(cls, username, screen):  # method used to ensure only one object is created
+    def __new__(cls, screen):  # method used to ensure only one object is created
         if cls._instance is None:  # If an instance does not exist, a new one will be created
             cls._instance = super(ViewData, cls).__new__(cls)
         return cls._instance  # If an instance already exists, it will be returned and used.
 
-    def __init__(self, username, screen):
+    def __init__(self, screen):
         #   Get screen dimensions
         info = pygame.display.Info()
         self.WIDTH, self.HEIGHT = info.current_w , info.current_h
@@ -53,7 +53,6 @@ class ViewData:
         self.screen = screen
         pygame.display.set_caption('View Data')
 
-        self.Username = username
         #   Load and scale images
         self.Load_images()
 
@@ -163,22 +162,25 @@ class ViewData:
             UserID associated with the user's username stored in the
             credentials table.
         """
+        # retrieve results for a specific metal
+        query = """
+                SELECT r.Wavelength, r.Frequency, r.LightIntensity,
+                    r.KineticEnergy, r.Current, r.PhotonEnergy
+                FROM results r
+                JOIN metals m ON r.MetalID = m.MetalID
+                WHERE m.Name = ?
+                """
 
-        query = """SELECT Wavelength, Frequency, LightIntensity, 
-                   KineticEnergy, Current, PhotonEnergy 
-                   FROM {} as m, credentials as c 
-                   WHERE c.Username = ? and m.UserID = c.UserID;""".format(name)
-
-        self.c.execute(query, (self.Username,))
+        self.c.execute(query, (name,))
         data = self.c.fetchall()
         return data
 
+    """NEEDS TO BE REWORKED"""
     def RetrieveAll(self):
         # Method to retrieve results for all metals from appropriate tables
         data = [] # initialise 2d array which will store data
         # List of metals
-        metals = ['Aluminium', 'Beryllium', 'Caesium', 'Calcium', 'Cobalt', 'Gold', 'Iron', 'Lead', 'Mercury', 'Sodium',
-                  'Uranium', 'Zinc']
+
         """ 
             This loop will make a query to each of the 12 tables. It will retrieve the 
             following values: Wavelength, Frequency, LightIntensity, KineticEnergy, Current, PhotonEnergy
@@ -195,6 +197,7 @@ class ViewData:
             data += self.c.fetchall()
         return data
 
+    """Rework to avoid unnecessary db queries potentially?"""
     def ApproximatePlanckConstant(self, metal_name):
         # Method to approximate a value for plancks constant (6.63e-34) using their gathered data
 
@@ -226,7 +229,7 @@ class ViewData:
         else:
             return "None"
 
-
+    """rework to updated database schema"""
     def RetrieveMetalData(self):
         # Method to retrieve data about the metals from the 'metals' table
         new_metal_data = []
@@ -235,11 +238,14 @@ class ViewData:
         # query output is stored in 2d array
         metal_data = self.c.fetchall()
         for metal in metal_data:
-            # This query counts the total number of rows in each metal table taking UserID as a foreign key from credentials table
+
+            # This query counts the total number results for each metal
+
             query = ("""SELECT COUNT(*) 
-                     FROM {} as m, credentials as c 
-                     WHERE c.Username = ? and m.UserID = c.UserID;""").format(metal[0])
-            self.c.execute(query, (self.Username,))
+                     FROM results as r
+                     metals m ON r.MetalID = m.MetalID
+                     WHERE m.Name = ?;""")
+            self.c.execute(query, (metal[0],))
 
             results = list(metal)
             results.append(self.c.fetchone()[0])

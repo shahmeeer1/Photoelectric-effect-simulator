@@ -11,21 +11,6 @@ https://stackoverflow.com/a/1810367
 #   Initialise pygame
 pygame.init()
 
-"""
-To remove
-"""
-#   Class stores username globally
-class UserName:
-    _UserName = None
-
-    @classmethod
-    def setusername(cls, UserName):
-        cls._UserName = UserName
-
-    @classmethod
-    def getusername(cls):
-        return cls._UserName
-
 
 #   Abstract base class for defining states
 class State:
@@ -46,25 +31,6 @@ class State:
         raise NotImplementedError
 
 
-#   State representing login screen and login process
-class LoginState(State):
-    def Current(self):
-        import LoginGui
-        main, username = LoginGui.LoginPage().LoginState()
-
-        #   Stores username in Username class method
-        UserName.setusername(username)
-
-        #   returns 1 when successfully logged in
-        return main
-
-    def Transition(self, input):
-        if input == 1:
-            #   transition to  Gui initialisation state on successful login
-            return GuiInitialise()
-        else:
-            #   Returns None indication there is an error
-            return None
 
 
 """ State for initialising the GUI. This is necessary
@@ -101,28 +67,22 @@ class MenuState(State):
         Menu = MenuGui.Menu(GuiInitialise.GetScreen()).draw_menu()
         return Menu
 
-    """Convert into match statement"""
     #   Transitions to different states based on menu selection
     def Transition(self, input):
-        
-
-        #   Start sim
-        if input == 1:
-            return SelectMetalsState()
-
-        #   View data
-        elif input == 2:
-            return ViewDataState()
-
-        #   Analyse data
-        elif input == 3:
-            return AnalyseState()
-
-        #   Settings
-        elif input == 4:
-            return TheoryState()
+        match input:
+            case 1:
+                return SelectMetalsState()
+            case 2:
+                return ViewDataState()
+            case 3:
+                return AnalyseState()
+            case 4:
+                return TheoryState()
+            case _:
+                raise ValueError(f"Invalid input: {input}")
 
 
+"""Update to utilise model instead of passing data between states"""
 #   State for selecting metals
 class SelectMetalsState(State):
     #   Class variable grants global access to selected metals
@@ -135,6 +95,7 @@ class SelectMetalsState(State):
 
     #   Launches select metals screen
     def Current(self):
+        #TODO: SHOULD NOT INJECT DATA INTO STATE
         import SelectMetals
         page = SelectMetals.SelectMetals(GuiInitialise.GetScreen())
         option, SelectMetalsState.__SelectedMetals = page.draw_page()
@@ -170,6 +131,7 @@ class SimulatorState(State):
 #   State for saving simulation results to database
 class SaveResultsState(State):
     def Current(self):
+        #TODO: SHOULD NOT INJECT DATA INTO STATE
         import SaveResults
         #   selected metals list and username passed as arguments
         save = SaveResults.SaveData(SelectMetalsState.GetSelectedMetals(), UserName.getusername())
@@ -184,9 +146,10 @@ class SaveResultsState(State):
 # State for viewing data
 class ViewDataState(State):
     def Current(self):
+        #TODO: SHOULD NOT INJECT DATA INTO STATE
         import ViewData
         #   username and screen passed as arguments
-        view = ViewData.ViewData(UserName.getusername(), GuiInitialise.GetScreen())
+        view = ViewData.ViewData(GuiInitialise.GetScreen())
         option = view.draw_page()
         return option
 
@@ -198,6 +161,7 @@ class ViewDataState(State):
 """Requires credentials"""
 # State for analyzing data
 class AnalyseState(State):
+    #TODO: SHOULD NOT INJECT DATA INTO STATE
     def Current(self):
         import Analyse
         #   username and screen passed as arguments
@@ -236,13 +200,9 @@ class Initialise(State):
         dbsetup = DatabaseSetup.database_setup().Database_Status()
         return dbsetup
 
-    """ 
-        Transitions to login state if initialisation process successful.
-        Kills programme if unfixable error occurs
-    """
     def Transition(self, input):
         if input == 1:
-            return LoginState() #Update to remove login state
+            return GuiInitialise()
         else:
             print("Error initialising programme")
             return False
