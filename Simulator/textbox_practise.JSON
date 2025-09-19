@@ -1,0 +1,84 @@
+{
+  "text_box": {
+    "colours": {
+      "dark_bg": "#21282D",
+      "normal_border": "#FFFFFF",
+      "normal_text": "#AAAAAA"
+    },
+    "font": {
+      "size": "30"
+    },
+    "misc": {
+      "border_width": "2",
+      "padding": "20,4",
+      "shadow_width": "2",
+      "shape": "rounded_rectangle",
+      "shape_corner_radius": 5,
+      "text_horiz_alignment": "left"
+    }
+  },
+  "#Intensity": {
+    "font": {
+      "size": 20
+    },
+    "misc": {
+      "padding": "0,4",
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#Frequency": {
+    "font": {
+      "size": 20
+    },
+    "misc": {
+      "padding": "0,10",
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#PhotonEnergy": {
+    "font": {
+      "size": 20
+    },
+    "misc": {
+      "padding": "0,10",
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#KineticEnergy": {
+    "font": {
+      "size": 20
+    },
+    "misc": {
+      "padding": "0,10",
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#Resultsbox": {
+    "font": {
+      "size": 18
+    },
+    "misc": {
+      "padding": "0,0",
+      "line_spacing": 0,
+      "text_vert_alignment": "center",
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#Result": {
+    "misc": {
+      "text_horiz_alignment": "center"
+    }
+  },
+  "#Current": {
+    "font": {
+      "size": 20
+    },
+    "misc": {
+      "text_horiz_alignment": "center",
+      "padding": "0,10"
+    }
+  },
+  "_COMMENT": {
+    "Lines 2 - 17 from pygame_gui documentation": "https://pygame-gui.readthedocs.io/en/latest/theme_reference/theme_text_box.html"
+  }
+}

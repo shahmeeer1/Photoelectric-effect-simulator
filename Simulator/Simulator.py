@@ -143,29 +143,29 @@ class Simulation:
 
         pygame.display.set_caption('Simulator')
         #   Load and scale background image
-        self.background_image = pygame.image.load('ButtonImages/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('Resources/ButtonImages/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
         #   Load and scale apparatus
-        self.apparatus_image = pygame.image.load('SimulatorImages/Apparatus.png').convert_alpha()
+        self.apparatus_image = pygame.image.load('Resources/SimulatorImages/Apparatus.png').convert_alpha()
         self.apparatus_image = pygame.transform.scale(self.apparatus_image, (self.WIDTH * 0.5755, self.HEIGHT * 0.7575))
 
         #   Load and scale light intensity label
-        self.light_intensity_label = pygame.image.load('SimulatorImages/LightIntensityText.png').convert_alpha()
+        self.light_intensity_label = pygame.image.load('Resources/SimulatorImages/LightIntensityText.png').convert_alpha()
         self.light_intensity_label = pygame.transform.scale(self.light_intensity_label,
                                                             (self.WIDTH * 0.15, self.HEIGHT * 0.04))
 
         #   Load and scale labels
-        self.output_labels = pygame.image.load('SimulatorImages/OutputLabels.png').convert_alpha()
+        self.output_labels = pygame.image.load('Resources/SimulatorImages/OutputLabels.png').convert_alpha()
         self.output_labels = pygame.transform.scale(self.output_labels, (self.WIDTH * 0.1465, self.HEIGHT * 0.4793))
 
         #   Load and scale colour spectrum
-        self.colour_spectrum = pygame.image.load('SimulatorImages/ColourSpectrum.png').convert_alpha()
+        self.colour_spectrum = pygame.image.load('Resources/SimulatorImages/ColourSpectrum.png').convert_alpha()
         self.colour_spectrum = pygame.transform.scale(self.colour_spectrum, (self.WIDTH * 0.8305, self.HEIGHT * 0.1319))
 
         #   Create Buttons
         button_names = ["AdvanceButton.png", "QuitButton.png", "RecordButton.png", "ViewButton.png"]
-        image_paths = ['ButtonImages/' + i for i in button_names]
+        image_paths = ['Resources/ButtonImages/' + i for i in button_names]
         images = self.load_button_images(image_paths, 1)  # Load all images in list
 
         self.advance_button = buttons.Button(0.7955, 0.8704, 0.1745, 0.1065, images[0], self.WIDTH, self.HEIGHT)

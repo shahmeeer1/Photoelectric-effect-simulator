@@ -1,0 +1,9 @@
+{
+  "message_window.#close_button":
+  {
+    "colours":
+    {
+      "normal_bg": "red"
+    }
+  }
+}

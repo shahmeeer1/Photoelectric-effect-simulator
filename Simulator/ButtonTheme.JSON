@@ -1,0 +1,33 @@
+{
+    "#ViewData": {
+        "colours": {
+            "normal_bg": "#f55b5b",
+            "hovered_bg": "#8a3030",
+            "disabled_bg": "#3b3b3b",
+            "selected_bg": "#8a3030",
+            "active_bg": "#8a3030",
+            "normal_text": "#FFFFFF",
+            "hovered_text": "#FFFFFF",
+            "selected_text": "#FFFFFF",
+            "active_text": "#6d736f",
+            "normal_border": "#FFFFFF",
+            "hovered_border": "#FFFFFF",
+            "disabled_border": "#808080",
+            "selected_border": "#8080B0"
+        },
+
+        "misc":
+         {
+             "shape": "rounded_rectangle",
+             "shape_corner_radius": "5",
+             "border_width": "2",
+             "text_horiz_alignment": "center",
+             "text_vert_alignment": "center",
+             "text_horiz_alignment_padding": "10",
+             "text_vert_alignment_padding": "5"
+         }
+    },
+    "_Comment": {
+        "This code is from the pygame_gui documentation. Lines 2 - 27": "https://pygame-gui.readthedocs.io/en/latest/theme_reference/theme_button.html"
+    }
+}
