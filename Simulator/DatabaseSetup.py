@@ -34,24 +34,21 @@ class database_setup:
             return 0 # Database setup failed
 
 
+    # Create the results table if it doesn't exist. one table for all results
     def create_results(self):
-        metals = ['Aluminium', 'Beryllium', 'Caesium', 'Calcium', 'Cobalt', 'Gold', 'Iron',
-                  'Lead', 'Mercury', 'Sodium', 'Uranium', 'Zinc']
         try:
-            # Create a table for each metal to store results if it doesn't exist
-            for metal in metals:
-                self.c.execute("""CREATE TABLE IF NOT EXISTS {} (
-                               ResultID INTEGER PRIMARY KEY AUTOINCREMENT,
-                               MetalID INTEGER,
-                               Wavelength REAL,
-                               Frequency REAL,
-                               LightIntensity REAL,
-                               KineticEnergy REAL,
-                               Current REAL,
-                               PhotonEnergy REAL,
-                               FOREIGN KEY (MetalID) REFERENCES metals(MetalID)
-                           )""".format(metal))
-                self.conn.commit()
+            self.c.execute("""CREATE TABLE IF NOT EXISTS results (
+                            ResultID INTEGER PRIMARY KEY AUTOINCREMENT,
+                            MetalID INTEGER,
+                            Wavelength REAL,
+                            Frequency REAL,
+                            LightIntensity REAL,
+                            KineticEnergy REAL,
+                            Current REAL,
+                            PhotonEnergy REAL,
+                            FOREIGN KEY (MetalID) REFERENCES metals(MetalID)
+                        )""")
+            self.conn.commit()
         except:
             print("Error creating results table")
 
