@@ -96,7 +96,7 @@ class ViewData:
         ]
 
         # Create pygame_gui manager
-        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "ButtonTheme.JSON")
+        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
 
         # set dynamic button size
         buttons_size = (self.WIDTH * 0.0716, self.HEIGHT * 0.127)

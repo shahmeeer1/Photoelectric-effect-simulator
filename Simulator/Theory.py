@@ -58,7 +58,7 @@ class Theory:
         self.QuitButton_image = pygame.image.load('Resources/ButtonImages/QuitButton.png').convert_alpha()
         self.QuitButton = buttons.Button(0.82, 0.84, 0.1758, 0.1146, self.QuitButton_image, self.WIDTH, self.HEIGHT)
 
-        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "ButtonTheme.JSON")
+        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
         self.page1_button = pygame_gui.elements.UIButton(pygame.Rect(self.scaleT((1319, 542)), self.scaleT((118, 50))), "Page 1", manager= self.ui_manager, object_id= "#ViewData")
         self.page2_button = pygame_gui.elements.UIButton(pygame.Rect(self.scaleT((1319, 617)), self.scaleT((118, 50))), "Page 2", manager= self.ui_manager, object_id= "#ViewData")
 

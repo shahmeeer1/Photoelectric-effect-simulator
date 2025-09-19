@@ -181,7 +181,7 @@ class Simulation:
         self.view_button = buttons.Button(0.6452, 0.8704, 0.13607, 0.1065, images[3], self.WIDTH, self.HEIGHT)
 
         #   Create sliders
-        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "HorizontalSlider.JSON")
+        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/HorizontalSlider.JSON")
 
         self.spectrum_slider = pygame_gui.elements.UIHorizontalSlider(
             pygame.Rect((self.WIDTH * 0.037, self.HEIGHT * 0.135), (self.WIDTH * 0.8335, self.HEIGHT * 0.035)),
@@ -193,8 +193,8 @@ class Simulation:
             (0, 100), manager= self.manager)
 
         #   Create Entries
-        self.manager.get_theme().load_theme("textbox_practise.JSON") # Load widget theme files
-        self.manager.get_theme().load_theme("temp.JSON")  # pos, size
+        self.manager.get_theme().load_theme("Resources/Styling/textbox_practise.JSON") # Load widget theme files
+        self.manager.get_theme().load_theme("Resources/Styling/temp.JSON")  # pos, size
         self.wavelength_entry = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((self.WIDTH * 0.8726, self.HEIGHT * 0.01852),
                                       (self.WIDTH * 0.1046, self.HEIGHT * 0.0775)), manager=self.manager,
@@ -234,8 +234,8 @@ class Simulation:
                                                                              self.WIDTH * 0.071, self.HEIGHT * 0.045),
                                                                  self.manager, False, object_id="#Intensity")
 
-        self.manager.get_theme().load_theme("window.JSON")
-        self.manager.get_theme().load_theme("tempbutton.JSON")
+        self.manager.get_theme().load_theme("Resources/Styling/window.JSON")
+        self.manager.get_theme().load_theme("Resources/Styling/tempbutton.JSON")
 
 
     def return_to_valid_state(self, currentValue):

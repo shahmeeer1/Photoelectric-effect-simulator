@@ -746,7 +746,7 @@ class Analyse:
     # Method to set up GUI elements
     def SetupGui(self):
         # Create a UIManager to manage UI elements from the pygame_ui library
-        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "ButtonTheme.JSON")
+        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
 
         # Define the container rectangle for the scrollable container
         container_Rect = pygame.Rect(self.WIDTH * 0.033, self.HEIGHT * 0.15, self.WIDTH * 0.2, self.HEIGHT * 0.579)
