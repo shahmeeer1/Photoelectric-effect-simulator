@@ -146,7 +146,7 @@ class Graph:
             self.WIDTH, self.HEIGHT = info.current_w, info.current_h
 
             # Connect to database
-            self.conn = sqlite3.connect('Credentials.db')
+            self.conn = sqlite3.connect('SimData.db')
             self.c = self.conn.cursor()
             self.font = pygame.font.Font(None, int(self.WIDTH * 38 / 1536))
 

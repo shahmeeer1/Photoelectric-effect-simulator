@@ -37,7 +37,7 @@ class User():
         self._salt = ""
 
         # ===== Database Attributes =====
-        self.conn = sqlite3.connect('Credentials.db')
+        self.conn = sqlite3.connect('SimData.db')
         self.c = self.conn.cursor()
     def close_db(self):
         self.c.close()

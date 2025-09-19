@@ -8,7 +8,7 @@ def SaveData(Metals, username):
 
     try:
         #   Create Database connection and cursor
-        connect = sqlite3.connect('Credentials.db')
+        connect = sqlite3.connect('SimData.db')
         cursor = connect.cursor()
 
         #   Retrieve UserID from credentials table using username

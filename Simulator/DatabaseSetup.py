@@ -1,4 +1,5 @@
 import sqlite3
+#TODO: add error handling for database connection and table creation
 
 """
 sqlite3 library used for database management
@@ -9,10 +10,10 @@ class database_setup:
     def __init__(self, ):
         try:
             # Establish connection to the database
-            self.conn = sqlite3.connect('Credentials.db')
+            self.conn = sqlite3.connect('SimData.db')
             self.c = self.conn.cursor()
             # Create tables and populate with initial data
-            self.create_credentials_table()
+
             self.create_results()
             self.create_metals_table()
             self.populate_metals()
@@ -32,19 +33,6 @@ class database_setup:
         else:
             return 0 # Database setup failed
 
-    def create_credentials_table(self):
-        try:
-            # Create the credentials table if it doesn't exist
-            self.c.execute("""CREATE TABLE IF NOT EXISTS credentials (
-                                   UserID INTEGER PRIMARY KEY AUTOINCREMENT,
-                                   Username TEXT,
-                                   Salt TEXT,
-                                   Hash TEXT
-                               )"""
-                           )
-            self.conn.commit()
-        except:
-            print("Error creating credentials table")
 
     def create_results(self):
         metals = ['Aluminium', 'Beryllium', 'Caesium', 'Calcium', 'Cobalt', 'Gold', 'Iron',
@@ -54,14 +42,14 @@ class database_setup:
             for metal in metals:
                 self.c.execute("""CREATE TABLE IF NOT EXISTS {} (
                                ResultID INTEGER PRIMARY KEY AUTOINCREMENT,
-                               UserID INTEGER,
+                               MetalID INTEGER,
                                Wavelength REAL,
                                Frequency REAL,
                                LightIntensity REAL,
                                KineticEnergy REAL,
                                Current REAL,
                                PhotonEnergy REAL,
-                               FOREIGN KEY (UserID) REFERENCES credentials(UserID)
+                               FOREIGN KEY (MetalID) REFERENCES metals(MetalID)
                            )""".format(metal))
                 self.conn.commit()
         except:
@@ -100,16 +88,8 @@ class database_setup:
         }
 
         try:
-            # Check if metals table is empty or not
-            self.c.execute("SELECT COUNT(*) FROM metals")
-            row_count = self.c.fetchone()[0]
-            if row_count == 12:
-                return # Metals already populated
-            elif 0 < row_count< 12:
-                # Clear existing data if not fully populated
-                self.c.execute("DELETE FROM metals")
-            else:
-                pass
+            # Clear existing data in metals table
+            self.c.execute("DELETE FROM metals")
             # Insert metal properties into the metals table
             for metal, property in metal_properties.items():
                 self.c.execute(

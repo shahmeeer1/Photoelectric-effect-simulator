@@ -31,7 +31,7 @@ class Metal:
     def setup_metal(self):
         try:
             # Establish connection to the SQLite database
-            connect = sqlite3.connect('Credentials.db')
+            connect = sqlite3.connect('SimData.db')
             c = connect.cursor()
             # Query database to retrieve metal properties based on name
             query = "SELECT Atomicnumber, Workfunction, Tfrequency, Twavelength FROM metals WHERE Name = ?"
