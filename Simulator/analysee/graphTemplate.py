@@ -167,6 +167,15 @@ class graphTemplate:
             pygame.display.flip()  # Update the full display Surface to the screen
             clock.tick(10)  # Limit to 60 frames per second
 
+    def set_x_range(self, range, step):
+        self.x_range = range
+        self.x_step = step
+
+    def set_y_range(self, range, step):
+        self.y_range = range
+        self.y_step = step
+    
+
 #pygame.init()
 # # Example usage: set x axis from -5 to 5 with step 2, y axis from 0 to 100 with step 20
 #temp = graphTemplate(x_axis_at_zero=False, x_range=(0, 10), y_range=(-10, 10), x_step=1, y_step=2)

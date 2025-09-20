@@ -163,9 +163,9 @@ class ViewDataState(State):
 class AnalyseState(State):
     #TODO: SHOULD NOT INJECT DATA INTO STATE
     def Current(self):
-        import Analyse
+        import analysee.analyse_gui as analyse_gui
 
-        analysis = Analyse.Analyse(GuiInitialise.GetScreen())
+        analysis = analyse_gui(GuiInitialise.GetScreen())
         option = analysis.draw_page()
         return option
 
