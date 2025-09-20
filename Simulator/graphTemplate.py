@@ -2,34 +2,27 @@ import pygame
 import math
 
 class graphTemplate:
-    def __init__(self, surface, x_axis_at_zero=True, x_range=(0, 9), y_range=(0, 9), x_step=None, y_step=None):
-        """
-        :param x_axis_at_zero: If True, X and Y axes cross at (0,0) (bottom-left).
-                               If False, X axis is halfway up the Y axis.
-        :param x_range: Tuple (min, max) for X axis labels.
-        :param y_range: Tuple (min, max) for Y axis labels.
-        :param x_step: Step size for X axis ticks/labels. If None, auto-calculated.
-        :param y_step: Step size for Y axis ticks/labels. If None, auto-calculated.
-        """
+    def __init__(self, graph_dimensions, x_axis_at_zero=True, x_range=(0, 9), y_range=(0, 9), x_step=None, y_step=None):
 
-        # self.screen = surface
-        self.screen = pygame.display.set_mode((1000, 800))
-        self.font = pygame.font.SysFont(None, 24)
+        self.screen = pygame.Surface(graph_dimensions)   # Surface to draw the graph on
+        #self.screen = pygame.display.set_mode((800, 600))   # Surface to draw the graph on
+        self.font = pygame.font.SysFont(None, 24)       # Default font for labels
+
         self.WIDTH, self.HEIGHT = self.screen.get_size()
         self.running = True
 
-        self.x_axis_at_zero = x_axis_at_zero
-        self.x_range = x_range
-        self.y_range = y_range
-        self.x_step = x_step
-        self.y_step = y_step
+        self.x_axis_at_zero = x_axis_at_zero    # If False, X axis is halfway up the Y axis
+        self.x_range = x_range                  # (min, max) for X axis
+        self.y_range = y_range                  # (min, max) for Y axis
+        self.x_step = x_step                    # Step size for X axis ticks/labels
+        self.y_step = y_step                    # Step size for Y axis ticks/labels
 
-        self.y_axis_x = 70 # X position of Y axis
-        self.x_axis_y = self.HEIGHT - 50 if x_axis_at_zero else self.HEIGHT // 2 # Y position of x axis
+        self.y_axis_x = 70      # X position of Y axis
+        self.x_axis_y = self.HEIGHT - 50 if x_axis_at_zero else self.HEIGHT // 2    # Y position of x axis
 
 
     """ Draws the X and Y axes and ticks on the graph surface. """
-    def draw_axes(self):
+    def draw_graph(self):
 
         # Draw X and Y axes
         # Draw X axis
@@ -139,11 +132,29 @@ class graphTemplate:
             pygame.draw.circle(self.screen, "black", (x, y), 4)
 
 
+    def draw_x_label(self, label):
+        text = self.font.render(label, True, (0, 0, 0))
+        self.screen.blit(text, (self.WIDTH // 2 - text.get_width() // 2, self.HEIGHT - 30))
+
+    def draw_y_label(self, label):
+        text = self.font.render(label, True, (0, 0, 0))
+        # Rotate the text surface for vertical display
+        rotated_text = pygame.transform.rotate(text, 90)
+        self.screen.blit(rotated_text, (20, self.HEIGHT // 2 - rotated_text.get_height() // 2))
+
+    def clear(self):
+        self.screen.fill((255, 255, 255))  # Fill the screen with white
+
+    def display_message(self, message):
+        text = self.font.render(message, True, (0, 0, 0))
+        self.screen.blit(text, (self.WIDTH // 2 - text.get_width() // 2, self.HEIGHT // 2 - text.get_height() // 2))
 
     def draw_page(self):
         clock = pygame.time.Clock()
         self.screen.fill((255, 255, 255))  # Fill the screen with white
-        self.draw_axes()
+        self.draw_graph()
+        self.draw_x_label("X Axis")
+        self.draw_y_label("Y Axis")
         self.plot_points([(1,1), (2,4), (3,9), (4,6), (5,2), (6,3)])
 
         while self.running:
@@ -156,7 +167,8 @@ class graphTemplate:
             pygame.display.flip()  # Update the full display Surface to the screen
             clock.tick(10)  # Limit to 60 frames per second
 
-pygame.init()
-# Example usage: set x axis from -5 to 5 with step 2, y axis from 0 to 100 with step 20
-temp = graphTemplate(x_axis_at_zero=False, x_range=(0, 10), y_range=(-10, 10), x_step=1, y_step=2)
-temp.draw_page()
+#pygame.init()
+# # Example usage: set x axis from -5 to 5 with step 2, y axis from 0 to 100 with step 20
+#temp = graphTemplate(x_axis_at_zero=False, x_range=(0, 10), y_range=(-10, 10), x_step=1, y_step=2)
+#wiin = pygame.display.set_mode((800, 600))
+# temp.draw_page()
