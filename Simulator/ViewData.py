@@ -59,7 +59,7 @@ class ViewData:
         #   Draw Buttons
         self.CreateButtons()
 
-        self.conn = sqlite3.connect('SimData.db')
+        self.conn = sqlite3.connect('Simulator/SimData.db')
         self.c = self.conn.cursor()
 
 

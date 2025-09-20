@@ -133,8 +133,8 @@ class SaveResultsState(State):
     def Current(self):
         #TODO: SHOULD NOT INJECT DATA INTO STATE
         import SaveResults
-        #   selected metals list and username passed as arguments
-        save = SaveResults.SaveData(SelectMetalsState.GetSelectedMetals(), UserName.getusername())
+        #   selected metals list 
+        save = SaveResults.SaveData(SelectMetalsState.GetSelectedMetals())
         return save
 
     #   Returns to menu screen
@@ -148,7 +148,7 @@ class ViewDataState(State):
     def Current(self):
         #TODO: SHOULD NOT INJECT DATA INTO STATE
         import ViewData
-        #   username and screen passed as arguments
+
         view = ViewData.ViewData(GuiInitialise.GetScreen())
         option = view.draw_page()
         return option
@@ -164,7 +164,7 @@ class AnalyseState(State):
     #TODO: SHOULD NOT INJECT DATA INTO STATE
     def Current(self):
         import Analyse
-        #   username and screen passed as arguments
+
         analysis = Analyse.Analyse(GuiInitialise.GetScreen())
         option = analysis.draw_page()
         return option

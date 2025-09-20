@@ -10,7 +10,7 @@ class database_setup:
     def __init__(self, ):
         try:
             # Establish connection to the database
-            self.conn = sqlite3.connect('SimData.db')
+            self.conn = sqlite3.connect('Simulator/SimData.db')
             self.c = self.conn.cursor()
             # Create tables and populate with initial data
 
