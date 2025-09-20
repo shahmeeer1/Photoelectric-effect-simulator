@@ -2,6 +2,8 @@ import pygame
 import pygame_gui
 import sqlite3
 import buttons
+import graphTemplate as gt
+
 """
 pygame and pygame_ui library used for gui
 sqlite3 used for database management
@@ -103,109 +105,34 @@ class Regression:
             return False
 
 class Graph:
-    _instances = []  # Class attribute to store instances; 2D array
-    _instantiated = False  # Flag indicating whether instances have been created
-
-    """
-    Custom constructor to control instantiation of objects. Follows singleton pattern.
-    Allows for only 4 distinct instances of this or any subclass of this class.
-    For every metal, there can be up to 4 (and no more than 4) associated objects which only need to be instantiated once.
-    """
-
-    def __new__(cls, metal, graph, username):
-        for i in cls._instances:  # Iterates through class method _instances
-            if i[0] == metal:  # Checks if any instances associated with this metal already exist
-                for k in range(1, len(i)):
-                    if i[k].name == graph:  # Checks if an object for the current graph already exists
-                        return i[k]  # Returns pre-existing object
-                new_graph = super().__new__(cls)  # Creates new object
-                new_graph.name = graph  # Assigns argument value to object 'name' attribute
-                i.append(new_graph)  # new object added to class variable array
-                return new_graph  # returns new object
-        new_instance = super().__new__(cls)  # Creates first object associated with this metal
-        new_instance.name = graph  # assigns object 'name' attribute.
-        cls._instances.append(
-            [metal, new_instance])  # Adds record of object associated with this metal to class variable
-        return new_instance
 
     #   Continued from custom initialiser
-    def __init__(self, metal, graph, username):
-        if not hasattr(self, 'metal'):  # Check if attributes are already initialized
-            self.metal = metal
-            self.metal = metal
-            self.name = graph
-            self.results = []
-            self.coords = []
-            self.Username = username
+    def __init__(self, metal, graph_type):
 
-            # Optimisation Attributes
-            self.Drawn = False
-
-            # Retrieve window dimensions
-            info = pygame.display.Info()
-            self.WIDTH, self.HEIGHT = info.current_w, info.current_h
-
-            # Connect to database
-            self.conn = sqlite3.connect('SimData.db')
-            self.c = self.conn.cursor()
-            self.font = pygame.font.Font(None, int(self.WIDTH * 38 / 1536))
-
-            # Setup graph surface
-            self.SetupGraphSurface()
-
-    # Methods to scale values to fit the screen
-    def Ratio_t(self, tup):
-        # Base window size was 1536, 864 pixels during development thus scale must be a ration of this
-        return round((self.WIDTH * tup[0]) / 1536, 2), round((self.HEIGHT * tup[1]) / 864, 2)
-
-    # Method to calculate coordinates based on results
-    # To be overridden in subclass
-    def CalculateCoordinates(self):
+        self.metal = metal
+        self.graph_type = graph_type
+        self.results = []
         self.coords = []
-        try:
-            # Check if results were found
-            if len(self.results) == 0:
-                return False
-            else:
-                return True
-        except:
-            return False
 
-    # Method to display the graph surface on the screen
-    def DisplayGraph(self, screen, pos):
-        screen.blit(self.GraphSurface, pos)
+        # Connect to database
+        self.conn = sqlite3.connect('Simulator/SimData.db')
+        self.c = self.conn.cursor()
 
-    # Method to get the graph surface
+    def CalculateCoordinates(self):
+        pass
+
     def GetSurface(self):
-        return self.GraphSurface
+        pass
 
-    # Method to setup the graph surface
-    def SetupGraphSurface(self):
-        self.GraphSurface = pygame.Surface((self.WIDTH * 0.4, self.HEIGHT * 0.65))
-        self.GraphSurface.fill((0, 255, 255))
-
-    # Method to display loading message on graph surface
     def LoadingGraph(self):
-        self.GraphSurface.fill((0, 255, 255))
-        text_surface = self.font.render("LOADING\n GRAPH", True, "black", )
-        self.GraphSurface.blit(text_surface, self.Ratio_t((270, 250)))
+        pass
 
-    # Method to display no results message on graph surface
     def NoResultsError(self):
-        self.GraphSurface.fill((0, 255, 255))
-        text_surface = self.font.render("NO RESULTS TO\n   DISPLAY", True, "black", )
-        self.GraphSurface.blit(text_surface, self.Ratio_t((230, 250)))
+        pass
 
-    # Method to retrieve data from database
-    def RetrieveData(self, param1, param2, username, *args):
-        query = """SELECT {}, {}
-                FROM {} as m, credentials as c
-                WHERE c.Username = ? and c.UserID = m.UserID""".format(param1, param2, self.metal)
-        self.c.execute(query, (username,))
-        results = self.c.fetchall()
-        return results
+    def RetrieveData():
+        pass
 
-    # Abstract method for drawing graoph axes
     def EmptyGraphAxis(self):
         pass
 
@@ -712,6 +639,8 @@ class I_vs_F(Graph):
         else:
             self.NoResultsError()
 
+
+
 # class to display gui and control graph plotting
 class Analyse:
     _instance = None  # Check if an instance of this class already exists
@@ -736,11 +665,15 @@ class Analyse:
         self.GraphSurface.fill((0, 255, 255))
         self.font = pygame.font.Font(None, int(self.WIDTH * 38 / 1536))
 
+        self.GraphDimensions = (self.WIDTH * 0.4, self.HEIGHT * 0.65)
+
     # Method to display a message indicating no data to display
     def EmptyGraph(self):
-        self.GraphSurface.fill((0, 255, 255))
-        text_surface = self.font.render("Select a Metal\n And Graph To\n    Display", True, "black", )
-        self.GraphSurface.blit(text_surface, (self.WIDTH * 230 / 1536, self.HEIGHT * 250 / 864))
+        holder = gt.graphTemplate((self.WIDTH * 0.4, self.HEIGHT * 0.65))
+        holder.clear()
+        holder.draw_graph()
+        # self.GraphSurface.display_message("Select a Metal\n And Graph To\n    Display")
+        self.GraphSurface = holder.screen
 
     # Method to set up GUI elements
     def SetupGui(self):
@@ -839,7 +772,7 @@ class Analyse:
 
         # Stores metal selected to display graph for
         selected_metal = None
-        # Sores type of graph chosen to display
+        # Stores type of graph chosen to display
         selected_graph = None
 
         Current_Graph = None
@@ -906,6 +839,7 @@ class Analyse:
 
             else:
                 # If no graph is selected, display the current graph surface
+                
                 self.screen.blit(self.GraphSurface, GraphSurface_pos)
 
             # Process events
