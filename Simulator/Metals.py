@@ -13,38 +13,42 @@ class Metal:
     _instances = {} # Dictionary to store instances of Metal class
     _instantiated = False # Flag to track if the class has been instantiated
 
+    # Singleton pattern to ensure only one object for each metal created
     def __new__(cls, name):
-        # Singleton pattern to ensure only one object for each metal created
         # Check if an instance for the metal name already exists
         if name not in cls._instances:
             # If not, create a new instance and store it in the _instances dictionary
             instance = super(Metal, cls).__new__(cls)
-            cls._instances[name] = instance
+            cls._instances[name] = instance # Store the instance in the dictionary
         return cls._instances[name]
 
     def __init__(self, name):
         # Initialize properties of the metal object if not already initialised
-        if not hasattr(self, 'Atomic_Number'):
+        if not hasattr(self, 'instantiated'):
             self.name = name
             self.Atomic_Number, self.Work_Function, self.Tfrequency, self.Twavelength = self.setup_metal()
             self.results = [] # Results obtained form simulation
+            self.instantiated = True
+
+
     def setup_metal(self):
         try:
             # Establish connection to the SQLite database
             connect = sqlite3.connect('SimData.db')
             c = connect.cursor()
             # Query database to retrieve metal properties based on name
-            query = "SELECT Atomicnumber, Workfunction, Tfrequency, Twavelength FROM metals WHERE Name = ?"
+            query = "SELECT Atomicnumber, Workfunction, Tfrequency, Twavelength FROM metals WHERE MetalName = ?"
             c.execute(query, (self.name,))
         except:
             # Handle error if unable to setup metal
             print("Error setting up metal.")
             print("Metal name: {}".format(self.name))
+        
         # Fetch results from the database query
         results = c.fetchone()
         return results
 
-
+    """ seperation of concerns. need to remove"""
     def check_emit_electrons(self, photon_enery):
         # Check if the given photon energy is sufficient to emit electrons from the metal
         # In order to emit electrons, the photon energy must be greater than the threshold energy

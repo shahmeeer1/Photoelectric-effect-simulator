@@ -158,14 +158,14 @@ class ViewDataState(State):
         if input == 1:
             return MenuState()
 
-"""Requires credentials"""
+
 # State for analyzing data
 class AnalyseState(State):
     #TODO: SHOULD NOT INJECT DATA INTO STATE
     def Current(self):
         import Analyse
         #   username and screen passed as arguments
-        analysis = Analyse.Analyse(UserName.getusername(), GuiInitialise.GetScreen())
+        analysis = Analyse.Analyse(GuiInitialise.GetScreen())
         option = analysis.draw_page()
         return option
 

@@ -39,14 +39,14 @@ class database_setup:
         try:
             self.c.execute("""CREATE TABLE IF NOT EXISTS results (
                             ResultID INTEGER PRIMARY KEY AUTOINCREMENT,
-                            MetalID INTEGER,
+                            MetalName TEXT NOT NULL,
                             Wavelength REAL,
                             Frequency REAL,
                             LightIntensity REAL,
                             KineticEnergy REAL,
                             Current REAL,
                             PhotonEnergy REAL,
-                            FOREIGN KEY (MetalID) REFERENCES metals(MetalID)
+                            FOREIGN KEY (MetalName) REFERENCES metals(MetalName)
                         )""")
             self.conn.commit()
         except:
@@ -56,8 +56,7 @@ class database_setup:
         # Create the metals table if it doesn't exist
         # This table stored critical information on each metal
         self.c.execute("""CREATE TABLE IF NOT EXISTS metals (
-                           MetalID INTEGER PRIMARY KEY AUTOINCREMENT,
-                           Name TEXT,
+                           MetalName TEXT PRIMARY KEY,
                            Atomicnumber INTEGER,
                            Workfunction REAL,
                            Tfrequency REAL,
@@ -91,7 +90,7 @@ class database_setup:
             for metal, property in metal_properties.items():
                 self.c.execute(
                     '''
-                            INSERT INTO metals(Name, Atomicnumber, Workfunction, Tfrequency, Twavelength) 
+                            INSERT INTO metals(MetalName, Atomicnumber, Workfunction, Tfrequency, Twavelength) 
                             VALUES (?,?,?,?,?)
                         ''',(metal, property["Atomic_Number"], property["Work_Function"], property["frequency"],property["Wavelength"]))
         except:

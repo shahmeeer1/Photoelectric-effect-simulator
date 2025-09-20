@@ -4,24 +4,20 @@ import sqlite3
 sqlite3 used for database management
 """
 
-def SaveData(Metals, username):
+def SaveData(Metals):
 
     try:
         #   Create Database connection and cursor
         connect = sqlite3.connect('SimData.db')
         cursor = connect.cursor()
 
-        #   Retrieve UserID from credentials table using username
-        cursor.execute("SELECT UserID FROM credentials WHERE Username = ?", (username,))
-        UserID = cursor.fetchone()[0]
-        #   Store metal results in correct table
         #   List comprehension to remove empty elements from list
-        for i in [metal for metal in Metals if metal != ""]:
-            for result in i.results:
-                ins = [UserID] + result
-                query = """INSERT INTO {} 
-                (UserID, Wavelength, Frequency, LightIntensity, KineticEnergy, Current, PhotonEnergy)
-                VALUES(?,?,?,?,?,?,?)""".format(i.name)
+        for metal in [metal for metal in Metals if metal != ""]:
+            for result in metal.results:
+                ins = [metal.name] + result
+                query = """INSERT INTO results 
+                (MetalName, Wavelength, Frequency, LightIntensity, KineticEnergy, Current, PhotonEnergy)
+                VALUES(?,?,?,?,?,?,?)"""
 
                 cursor.execute(query, ins)
 

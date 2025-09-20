@@ -2,7 +2,7 @@ import pygame
 import math
 
 class graphTemplate:
-    def __init__(self, x_axis_at_zero=True, x_range=(0, 9), y_range=(0, 9), x_step=None, y_step=None):
+    def __init__(self, surface, x_axis_at_zero=True, x_range=(0, 9), y_range=(0, 9), x_step=None, y_step=None):
         """
         :param x_axis_at_zero: If True, X and Y axes cross at (0,0) (bottom-left).
                                If False, X axis is halfway up the Y axis.
@@ -11,6 +11,8 @@ class graphTemplate:
         :param x_step: Step size for X axis ticks/labels. If None, auto-calculated.
         :param y_step: Step size for Y axis ticks/labels. If None, auto-calculated.
         """
+
+        # self.screen = surface
         self.screen = pygame.display.set_mode((1000, 800))
         self.font = pygame.font.SysFont(None, 24)
         self.WIDTH, self.HEIGHT = self.screen.get_size()

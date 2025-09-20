@@ -164,11 +164,10 @@ class ViewData:
         """
         # retrieve results for a specific metal
         query = """
-                SELECT r.Wavelength, r.Frequency, r.LightIntensity,
-                    r.KineticEnergy, r.Current, r.PhotonEnergy
-                FROM results r
-                JOIN metals m ON r.MetalID = m.MetalID
-                WHERE m.Name = ?
+                SELECT Wavelength, Frequency, LightIntensity,
+                    KineticEnergy, Current, PhotonEnergy
+                FROM results
+                WHERE MetalNAme = ?
                 """
 
         self.c.execute(query, (name,))
@@ -234,7 +233,7 @@ class ViewData:
         # Method to retrieve data about the metals from the 'metals' table
         new_metal_data = []
         # This query returns the Name, AtomicNumber, WorkFunction, Tfrequency, Twavelength of every row
-        self.c.execute("SELECT Name, AtomicNumber, WorkFunction, Tfrequency, Twavelength FROM metals")
+        self.c.execute("SELECT MetalName, AtomicNumber, WorkFunction, Tfrequency, Twavelength FROM metals")
         # query output is stored in 2d array
         metal_data = self.c.fetchall()
         for metal in metal_data:
@@ -242,9 +241,8 @@ class ViewData:
             # This query counts the total number results for each metal
 
             query = ("""SELECT COUNT(*) 
-                     FROM results as r
-                     metals m ON r.MetalID = m.MetalID
-                     WHERE m.Name = ?;""")
+                     FROM results as
+                     WHERE MetalName = ?;""")
             self.c.execute(query, (metal[0],))
 
             results = list(metal)

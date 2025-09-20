@@ -716,16 +716,15 @@ class I_vs_F(Graph):
 class Analyse:
     _instance = None  # Check if an instance of this class already exists
 
-    def __new__(cls, username, screen):  # method used to ensure only one object is created
+    def __new__(cls, screen):  # method used to ensure only one object is created
         if cls._instance is None:  # If an instance does not exist, a new one will be created
             cls._instance = super(Analyse, cls).__new__(cls)
         return cls._instance  # If an instance already exists, it will be returned and used.
 
-    def __init__(self, username, screen):
+    def __init__(self, screen):
         # Initialize attributes
         info = pygame.display.Info()
         self.WIDTH, self.HEIGHT = info.current_w, info.current_h
-        self.Username = username
 
         self.screen = screen
         pygame.display.set_caption('Analyse')
