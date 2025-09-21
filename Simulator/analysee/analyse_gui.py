@@ -1,6 +1,5 @@
 import pygame
 import pygame_gui
-import sqlite3
 import buttons
 import analysee.graphTemplate as gt
 from .ke_vs_f import KE_VS_F
