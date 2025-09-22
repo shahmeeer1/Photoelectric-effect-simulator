@@ -10,7 +10,7 @@ class I_VS_F(Graph):
         self.x_var = "Frequency"
         self.y_var = "Current"
 
-        self.min_x, self.min_y, self.max_x, self.max_y = 0
+        self.min_x = self.min_y = self.max_x = self.max_y = 0
 
     # Method to retrieve data from database
     def processResults(self):
@@ -24,6 +24,8 @@ class I_VS_F(Graph):
         self.max_y = max(row[1] for row in self.results)
 
     def DrawGraph(self):
+        self.processResults()
+        self.EmptyGraphAxis()
         self.graphTemplate.plot_points(self.results)
 
     def EmptyGraphAxis(self):

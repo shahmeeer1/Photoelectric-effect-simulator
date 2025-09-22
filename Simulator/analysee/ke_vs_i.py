@@ -10,7 +10,7 @@ class KE_VS_i(Graph):
         self.x_var = "LightIntensity"
         self.y_var = "KineticEnergy"
 
-        self.min_x, self.min_y, self.max_x, self.max_y = 0
+        self.min_x = self.min_y = self.max_x = self.max_y = 0
 
 
     # Method to draw empty graph axes
@@ -23,7 +23,8 @@ class KE_VS_i(Graph):
         self.graphTemplate.draw_y_label(self.y_var)
 
     def DrawGraph(self):
-        
+        self.processResults()
+        self.EmptyGraphAxis()
         self.graphTemplate.plot_points(self.results)
 
         # Line = Regression(self.coords)
