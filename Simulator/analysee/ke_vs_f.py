@@ -15,8 +15,9 @@ class KE_VS_F(Graph):
     # Method to draw empty graph axes
     def EmptyGraphAxis(self):
         
-        self.graphTemplate = graphTemplate(self.graph_dim, True, 
+        self.graphTemplate = graphTemplate(self.graph_dim, False, 
                                            (self.min_x, self.max_x), (self.min_y, self.max_y))
+        self.graphTemplate.clear()
         self.graphTemplate.draw_graph()
         self.graphTemplate.draw_x_label(self.x_var)
         self.graphTemplate.draw_y_label(self.y_var)
@@ -33,10 +34,11 @@ class KE_VS_F(Graph):
     # Method to retrieve data from database
     def processResults(self):
         self.results = super().RetrieveData()
-        self.results = [i for i in self.results if round(i[0], 2) > 0.00] # only keep results > 0 after rounding
+        self.results = [(a, b * 100) for (a,b) in self.results] # only keep results > 0 after rounding
+        print("\nUpdated results: {}".format(self.results))
 
-        self.min_x = min(row[0] for row in self.results)
-        self.min_y = min(row[1] for row in self.results)
+        self.min_x = min(row[0] for row in self.results) - 100
+        self.min_y = max(row[1] for row in self.results) * -1 #min(row[1] for row in self.results)
 
         self.max_x = max(row[0] for row in self.results)
         self.max_y = max(row[1] for row in self.results)
