@@ -32,6 +32,7 @@ class I_VS_F(Graph):
         
         self.graphTemplate = graphTemplate(self.graph_dim, True, 
                                            (self.min_x, self.max_x), (self.min_y, self.max_y))
+        self.graphTemplate.clear()
         self.graphTemplate.draw_graph()
         self.graphTemplate.draw_x_label(self.x_var)
         self.graphTemplate.draw_y_label(self.y_var)
