@@ -37,10 +37,10 @@ class Graph:
         graphTemplate.display_message("No results\n   Found")
 
     def RetrieveData(self):
-        query = """ SELECT ?, ?
-                    FROM results
-                    WHERE MetalName = ?"""
+        query = f" SELECT {self.x_var}, {self.y_var} FROM results WHERE MetalName = ?"
         
-        self.c.execute(query, (self.x_var, self.y_var, self.metal,))
-        return self.c.fetchall()
+        self.c.execute(query, (self.metal,))
+        tempRes = self.c.fetchall()
+        print("Variable x: {}\nVariable y: {}\nResults: {}".format(self.x_var, self.y_var, tempRes))
+        return tempRes #replace tempres with self.c.fetchall
 
