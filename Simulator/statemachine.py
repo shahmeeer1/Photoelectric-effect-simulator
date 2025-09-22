@@ -112,7 +112,7 @@ class SelectMetalsState(State):
 #   State for running simulator
 class SimulatorState(State):
     def Current(self):
-        import Simulator
+        import sim.Simulator as Simulator
         #   Screen and list of selected metals passed as arguments
         Sim = Simulator.Simulation(SelectMetalsState.GetSelectedMetals(), GuiInitialise.GetScreen())
         option = Sim.draw_sim()
