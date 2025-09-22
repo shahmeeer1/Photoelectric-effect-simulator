@@ -2,9 +2,15 @@ import pygame
 import pygame_gui
 import buttons
 import re
+
 import sim.Particles as Particles
 import sim.simulator_utility as SimUtility
 from sim.simulator_core import simulator_core as SimCore
+from sim.GUIManager import GUIManager
+from sim.gui_validation import GUIValidation
+from sim.simulation_draw import SimulationDraw
+
+
 import random
 import threading
 
@@ -50,13 +56,16 @@ class Simulation:
         #   Create Game window
         self.screen = screen
 
-        self.setup_gui()
+        pygame.display.set_caption('Simulator')
 
         #   Initial sim values  # POSSIBLE EXTRACTION   
         self.Initial_wavelength = 525.0
         self.Initial_intensity = 50
 
         self.SimCore = SimCore(SelectedMetals, (self.WIDTH, self.HEIGHT))  # Initialise simulator core
+        self.gui = GUIManager((self.WIDTH, self.HEIGHT), self.screen)
+        self.validation = GUIValidation(self.gui, self.Initial_wavelength)
+        self.simDraw = SimulationDraw(self.gui, self.SimCore, (self.WIDTH, self.HEIGHT), self.screen)
 
 
     """Gui related"""
@@ -64,161 +73,15 @@ class Simulation:
         # Define the dimensions of the error window
         Rect = pygame.Rect(0, 0, self.WIDTH * 0.2, self.HEIGHT * 0.35)
         # Create the error window
-        error_window = pygame_gui.elements.UIWindow(Rect, self.manager, "ERROR", "message_window", "#message_window",
+        error_window = pygame_gui.elements.UIWindow(Rect, self.gui.manager, "ERROR", "message_window", "#message_window",
                                                     False)
         # Define the error message content
-        error_message = pygame_gui.elements.UITextBox("<strong>ARRRR</strong>", Rect, self.manager, False,
+        error_message = pygame_gui.elements.UITextBox("<strong>ARRRR</strong>", Rect, self.gui.manager, False,
                                                       container=error_window)
         # Make the error window blocking, so user cannot interact with buttons below window
         error_window.set_blocking(True)
 
 
-    """Gui related"""
-    def setup_gui(self):
-        # Method to setup simulation gui
-
-        pygame.display.set_caption('Simulator')
-        #   Load and scale background image
-        self.background_image = pygame.image.load('Resources/ButtonImages/MenuBackground.png').convert_alpha()
-        self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
-
-        #   Load and scale apparatus
-        self.apparatus_image = pygame.image.load('Resources/SimulatorImages/Apparatus.png').convert_alpha()
-        self.apparatus_image = pygame.transform.scale(self.apparatus_image, (self.WIDTH * 0.5755, self.HEIGHT * 0.7575))
-
-        #   Load and scale light intensity label
-        self.light_intensity_label = pygame.image.load('Resources/SimulatorImages/LightIntensityText.png').convert_alpha()
-        self.light_intensity_label = pygame.transform.scale(self.light_intensity_label,
-                                                            (self.WIDTH * 0.15, self.HEIGHT * 0.04))
-
-        #   Load and scale labels
-        self.output_labels = pygame.image.load('Resources/SimulatorImages/OutputLabels.png').convert_alpha()
-        self.output_labels = pygame.transform.scale(self.output_labels, (self.WIDTH * 0.1465, self.HEIGHT * 0.4793))
-
-        #   Load and scale colour spectrum
-        self.colour_spectrum = pygame.image.load('Resources/SimulatorImages/ColourSpectrum.png').convert_alpha()
-        self.colour_spectrum = pygame.transform.scale(self.colour_spectrum, (self.WIDTH * 0.8305, self.HEIGHT * 0.1319))
-
-        #   Create Buttons
-        button_names = ["AdvanceButton.png", "QuitButton.png", "RecordButton.png", "ViewButton.png"]
-        image_paths = ['Resources/ButtonImages/' + i for i in button_names]
-        images = SimUtility.load_button_images(image_paths, 1)  # Load all images in list
-
-        self.advance_button = buttons.Button(0.7955, 0.8704, 0.1745, 0.1065, images[0], self.WIDTH, self.HEIGHT)
-
-        #   Disable buttons for 2 seconds to avoid miss-clicking using threading
-        #   which will allow the rest of the gui to be setup making the transition smooth
-        self.advance_button.DisableAll()
-        threading.Timer(1, self.advance_button.EnableAll).start()
-
-        # Create quit, record and view buttons
-        self.quit_button = buttons.Button(0.02799, 0.8704, 0.1745, 0.1065, images[1], self.WIDTH, self.HEIGHT)
-        self.record_button = buttons.Button(0.4954, 0.8704, 0.13607, 0.1065, images[2], self.WIDTH, self.HEIGHT)
-        self.view_button = buttons.Button(0.6452, 0.8704, 0.13607, 0.1065, images[3], self.WIDTH, self.HEIGHT)
-
-        #   Create sliders
-        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/HorizontalSlider.JSON")
-
-        self.spectrum_slider = pygame_gui.elements.UIHorizontalSlider(
-            pygame.Rect((self.WIDTH * 0.037, self.HEIGHT * 0.135), (self.WIDTH * 0.8335, self.HEIGHT * 0.035)),
-            525.0,
-            (300, 750), manager= self.manager)
-
-        self.light_intensity_slider = pygame_gui.elements.UIHorizontalSlider(
-            pygame.Rect((self.WIDTH * 0.2357, self.HEIGHT * 0.90625), (self.WIDTH * 0.2311, self.HEIGHT * 0.0683)), 50,
-            (0, 100), manager= self.manager)
-
-        #   Create Entries
-        self.manager.get_theme().load_theme("Resources/Styling/textbox_practise.JSON") # Load widget theme files
-        self.manager.get_theme().load_theme("Resources/Styling/temp.JSON")  # pos, size
-        self.wavelength_entry = pygame_gui.elements.UITextEntryLine(
-            relative_rect=pygame.Rect((self.WIDTH * 0.8726, self.HEIGHT * 0.01852),
-                                      (self.WIDTH * 0.1046, self.HEIGHT * 0.0775)), manager=self.manager,
-            object_id="#Wavelength")
-        self.wavelength_entry.set_text_length_limit(6) # limit entry length to 6
-
-        #   create textboxes
-        # These textboxes output the current value for their respective attributes
-        # Made using pygame_ui library
-
-        self.frequency_outputbox = pygame_gui.elements.UITextBox("<strong> THz</strong>",
-                                                                 pygame.Rect(self.WIDTH * 0.8255, self.HEIGHT * 0.2731,
-                                                                             self.WIDTH * 0.13, self.HEIGHT * 0.07755),
-                                                                 self.manager, False, object_id="#Frequency")
-
-        self.photon_energy_outputbox = pygame_gui.elements.UITextBox("<strong> eV</strong>",
-                                                                     pygame.Rect(self.WIDTH * 0.8255,
-                                                                                 self.HEIGHT * 0.42477,
-                                                                                 self.WIDTH * 0.13,
-                                                                                 self.HEIGHT * 0.07755), self.manager,
-                                                                     False, object_id="#PhotonEnergy")
-
-        self.kinetic_energy_outputbox = pygame_gui.elements.UITextBox("<strong> eV</strong>",
-                                                                      pygame.Rect(self.WIDTH * 0.8255,
-                                                                                  self.HEIGHT * 0.57639,
-                                                                                  self.WIDTH * 0.13,
-                                                                                  self.HEIGHT * 0.07755), self.manager,
-                                                                      False, object_id="#KineticEnergy")
-
-        self.current_outputbox = pygame_gui.elements.UITextBox("<strong> mA</strong>",
-                                                               pygame.Rect(self.WIDTH * 0.8255, self.HEIGHT * 0.72801,
-                                                                           self.WIDTH * 0.13, self.HEIGHT * 0.07755),
-                                                               self.manager, False, object_id="#Current")
-
-        self.intensity_outputbox = pygame_gui.elements.UITextBox("<strong>50%</strong>",
-                                                                 pygame.Rect(self.WIDTH * 0.39, self.HEIGHT * 0.868,
-                                                                             self.WIDTH * 0.071, self.HEIGHT * 0.045),
-                                                                 self.manager, False, object_id="#Intensity")
-
-        self.manager.get_theme().load_theme("Resources/Styling/window.JSON")
-        self.manager.get_theme().load_theme("Resources/Styling/tempbutton.JSON")
-
-    """Gui related"""
-    def return_to_valid_state(self, currentValue):
-        try:
-            # set wavelength slider to the current value for wavelength
-            self.wavelength_entry.set_text(str(currentValue))
-            self.spectrum_slider.set_current_value(float(currentValue))
-
-        except:
-            # In the case of an error, the frequency slider is reset to its
-            # initial state using the initial state attributes
-            self.wavelength_entry.set_text(str(self.Initial_wavelength))
-            self.spectrum_slider.set_current_value(self.Initial_wavelength)
-
-    """Gui related"""
-    def update_spectrum_slider(self, currentValue, inputted_value):
-        # The wavelength output box and slider are updated using this method whenever a change takes place.
-        try:
-            self.spectrum_slider.set_current_value(float(inputted_value))
-            self.wavelength_entry.set_text(str(float(inputted_value)))
-            self.wavelength_entry.rebuild()
-        except:
-            # In the case of an error, the error window is displayed and the entry value is reset to the previous value
-            self.error_window()
-            self.wavelength_entry.set_text(str(currentValue))
-
-    """Gui related"""
-    def wavelength_validation(self, currentValue, inputted_value):
-        # method to validate wavelength value input using regular expressions
-        """
-            ([0-9]{,3}): Matches any digits between 0-9 that ois 0-3 digits long
-            ([.]([0-9]{1,2}))? : Matches any 1 or 2 digits between 0-9 that are
-                                 preceded by a decimal point. The ? signifies that
-                                 there must be 0 or 1 of the group preceding it meaning
-                                 the input may be integer of float with 1 or 2 digits
-                                 after the decimal.
-            Examples of valid inputs according to this expression: 123, 1.23, 456.7
-        """
-        try:
-            if re.fullmatch("([0-9]{0,3})([.]([0-9]{1,2}))?", inputted_value):
-                if 300.00 <= float(inputted_value) <= 750.00: # only allow inputs between 300 and 750
-                    return True
-            else:
-                return False
-        except:
-            self.return_to_valid_state(currentValue)
-            # resets the input box after invalid input and displays error
 
     """Both"""  #   POSSIBLE EXTRACTION
     def update_output(self, currentWavelength):
@@ -268,11 +131,11 @@ class Simulation:
         # Create a new window to display the results table
 
         window = pygame_gui.elements.UIWindow(
-            pygame.Rect(0.065 * self.WIDTH, 0.12 * self.HEIGHT, self.WIDTH * 0.853, self.HEIGHT * 0.5), self.manager,
+            pygame.Rect(0.065 * self.WIDTH, 0.12 * self.HEIGHT, self.WIDTH * 0.853, self.HEIGHT * 0.5), self.gui.manager,
             window_display_title="Results Table"
         )
 
-        scrolling_container = pygame_gui.elements.UIScrollingContainer(pygame.Rect((0, 0), window.get_container().get_size()), self.manager, container=window)
+        scrolling_container = pygame_gui.elements.UIScrollingContainer(pygame.Rect((0, 0), window.get_container().get_size()), self.gui.manager, container=window)
 
         # Headings for the table
         headings = ["Wavelength", "Frequency",
@@ -291,7 +154,7 @@ class Simulation:
                 html_text=cell,
                 relative_rect=pygame.Rect((table_x + index * cell_width, table_y),
                                           (cell_width, cell_height)),
-                manager=self.manager,
+                manager=self.gui.manager,
                 container=scrolling_container,
                 object_id="#Resultsbox"
             )
@@ -309,7 +172,7 @@ class Simulation:
                     html_text=str({}).format(cell), # Convert cell data to string and format as HTML
                     relative_rect=pygame.Rect((table_x + col_index * cell_width, table_y + index * cell_height),
                                               (cell_width, cell_height)),
-                    manager=self.manager,
+                    manager=self.gui.manager,
                     container=scrolling_container,
                     object_id="#Result"
                 )
@@ -330,7 +193,7 @@ class Simulation:
         # ...in at instantiation
         self.intensity_outputbox.set_text("<strong>{}%</strong>".format(currentIntensity))
         self.light_intensity_slider.set_current_value(currentIntensity)
-        self.return_to_valid_state(currentWavelength)
+        self.self.validation.return_to_valid_state(currentWavelength)
         self.update_output(currentWavelength)
         self.update_current(currentIntensity)
         self.SimCore.Photons.colour = self.SimCore.Photons.wavelength_to_rgb(currentWavelength)
@@ -345,29 +208,20 @@ class Simulation:
         currentWavelength = self.Initial_wavelength
         currentIntensity = self.Initial_intensity
 
-        # Define positions for GUI elements on screen
-        apparatus_pos = (self.WIDTH * 0.0846, self.HEIGHT * 0.1065)
-        spectrum_pos = (self.WIDTH * 0.0384, self.HEIGHT * 0.006944)
-        output_labels_pos = (self.WIDTH * 0.8255, self.HEIGHT * 0.2315)
-        intensity_label_pos = (self.WIDTH * 0.2357, self.HEIGHT * 0.868)
 
         # Set initial text for GUI elements
         self.wavelength_entry.set_text(str(currentWavelength))
         self.update_output(currentWavelength)
         self.Emit_Electrons(currentIntensity)
 
-        self.return_to_valid_state(currentWavelength)
+        self.validation.return_to_valid_state(currentWavelength)
         while True:
 
             # Calculate time since last update
             delta_time = clock.tick(60) / 1000.0
 
-            # Display static GUI elements on screen
-            self.screen.blit(self.background_image, (0, 0))
-            self.screen.blit(self.apparatus_image, apparatus_pos)
-            self.screen.blit(self.colour_spectrum, spectrum_pos)
-            self.screen.blit(self.output_labels, output_labels_pos)
-            self.screen.blit(self.light_intensity_label, intensity_label_pos)
+            # draw statiic elements of screen
+            self.simDraw.draw_static()
 
 
 
@@ -402,68 +256,9 @@ class Simulation:
                 # Return to select metals page
                 return 2
 
-            #   =========== Emit Photons ===============
+            #   =========== Emit Particles ===============
 
-            if random.randint(1,100) < currentIntensity:
-                # Photon emission is based on probability.
-                # If random value is less than light Intensity value:
-
-                # Create a photon element and add to particles list
-                self.SimCore.Photons.particles.append([self.SimCore.Photons.colour,
-                                               [random.randint(self.SimCore.Photons.start_x_range[0], self.SimCore.Photons.start_x_range[1]),
-                                                random.randint(self.SimCore.Photons.start_y_range[0],self.SimCore.Photons.start_y_range[1])],
-                                               [self.WIDTH * 0.59,-(self.HEIGHT * 0.35)]])
-                # photon colour, start position, end position, x and y velocity
-
-            # Update positions of photons and draw them on the screen
-            for particle in self.SimCore.Photons.particles:
-                # First check if photon position is within allowed range
-                if (
-                        particle[1][0] < self.SimCore.Photons.end_x_range[0] and particle[1][1] < self.SimCore.Photons.end_y_range[0] or
-                        particle[1][0] < self.SimCore.Photons.end_x_range[1] and particle[1][1] < self.SimCore.Photons.end_y_range[1]
-                ):
-                    # If not in allowed range, remove photon element from list
-                    self.SimCore.Photons.particles.remove(particle)
-                    # Determine if an electron will be emitted or not. Number of electrons cannot exceed number of photons nor can it exceed 120
-                    # Number of Electrons also based on probability
-                    if self.SimCore.Electrons.emit_electrons and random.uniform(0,1) < self.SimCore.Electrons.electrons_proportion and len(self.SimCore.Electrons.particles) < 120:
-                        self.SimCore.Electrons.particles.append([self.SimCore.Electrons.colour,
-                                                         [random.randint(self.SimCore.Electrons.start_x_range[0],
-                                                                         self.SimCore.Electrons.start_x_range[1]),
-                                                          random.randint(self.SimCore.Electrons.start_y_range[0],
-                                                                         self.SimCore.Electrons.start_y_range[1])],
-                                                         [self.WIDTH * (-((self.SimCore.Electrons.kinetic_energy - 0) * (600 - 200) / (self.SimCore.max_kinetic_energy - 0) + 200) )/1536, 0]])
-                                                        # Electron velocity = (ke - min_ke) * (max_speed_electron - min_speed_electron) / (max_ke - min_ke) + min_speed_electron
-                        # Electron colour, start position, end position, x and y velocity
-                    continue
-
-                # Update position of photon, making them move across screen
-                particle[1][0] -= particle[2][0] * delta_time
-                particle[1][1] -= particle[2][1] * delta_time
-                # Draw photon
-                pygame.draw.circle(self.screen,
-                                   particle[0],
-                                   particle[1],
-                                   self.SimCore.Photons.radius)
-
-            #   ===========Emit Electrons ===============
-
-            # Check if the electron is still within range
-            for particle in self.SimCore.Electrons.particles:
-                if(
-                        particle[1][0] > self.SimCore.Electrons.end_x_range[0]
-                ):
-                    # If it is outside the allowed range, remove the electron
-                    self.SimCore.Electrons.particles.remove(particle)
-                    continue
-                # Update the position of the electron by adding its velocity as a multiple of delta_time
-                particle[1][0] -= particle[2][0] * delta_time
-                pygame.draw.circle(self.screen,
-                                   particle[0],
-                                   particle[1],
-                                   self.SimCore.Electrons.radius)
-
-                #===========================================
+            self.simDraw.emit_particles(currentIntensity, delta_time)
 
             # ========== Event Loop ==========
 
@@ -504,9 +299,9 @@ class Simulation:
                     #   retrieve inputted value from wavelength entry box
                     inputted_value = self.wavelength_entry.get_text()
                     #   check if the value is valid
-                    if self.wavelength_validation(currentWavelength, inputted_value):
+                    if self.validation.wavelength_validation(currentWavelength, inputted_value):
                         #   update the slider to the new wavelength value
-                        self.update_spectrum_slider(currentWavelength, inputted_value)
+                        self.self.validation.update_spectrum_slider(currentWavelength, inputted_value)
                         #   update the new currentValue
                         currentWavelength = float(inputted_value)
                         # Update photons colour
@@ -528,9 +323,9 @@ class Simulation:
                     self.quit_button.EnableAll()
 
         # Update pygame and pygame_gui managers and window
-                self.manager.process_events(event)
+                self.gui.manager.process_events(event)
 
-            self.manager.update(delta_time)
-            self.manager.draw_ui(self.screen)
+            self.gui.manager.update(delta_time)
+            self.gui.manager.draw_ui(self.screen)
             pygame.display.update()
 
