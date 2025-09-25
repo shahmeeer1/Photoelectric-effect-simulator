@@ -53,3 +53,16 @@ class simulator_core:
                                          round(self.Electrons.kinetic_energy,2),
                                          self.Electrons.current,
                                          self.Photons.photon_energy])
+        
+
+    def update_output(self, currentWavelength):
+        # Calculate the frequency of the photon using the given current wavelength
+        frequency = self.Photons.calc_frequency(currentWavelength)
+        # Calculate the energy of the photon
+        photon_energy = self.Photons.calc_photon_energy()
+        # Calculate the kinetic energy of the electrons using the photon energy
+        kinetic_energy = self.Electrons.calc_kinetic_energy(photon_energy)
+        # If the kinetic energy is zero, set the current to zero and update the output box accordingly
+        if kinetic_energy == 0:
+            self.Electrons.current = 0
+        return (kinetic_energy, frequency, photon_energy, self.Electrons.current)
