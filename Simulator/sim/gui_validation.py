@@ -31,22 +31,22 @@ class GUIValidation:
     def return_to_valid_state(self, currentValue):
         try:
             # set wavelength slider to the current value for wavelength
-            self.gui.set_text(str(currentValue))
-            self.gui.set_current_value(float(currentValue))
+            self.gui.wavelength_entry.set_text(str(currentValue))
+            self.gui.spectrum_slider.set_current_value(float(currentValue))
 
         except:
             # In the case of an error, the frequency slider is reset to its
             # initial state using the initial state attributes
-            self.gui.set_text(str(self.Initial_wavelength))
-            self.gui.set_current_value(self.Initial_wavelength)
+            self.gui.wavelength_entry.set_text(str(self.Initial_wavelength))
+            self.gui.spectrum_slider.set_current_value(self.Initial_wavelength)
     
     def update_spectrum_slider(self, currentValue, inputted_value):
         # The wavelength output box and slider are updated using this method whenever a change takes place.
         try:
-            self.gui.set_current_value(float(inputted_value))
-            self.gui.set_text(str(float(inputted_value)))
-            self.gui.rebuild()
+            self.gui.spectrum_slider.set_current_value(float(inputted_value))
+            self.gui.wavelength_entry.set_text(str(float(inputted_value)))
+            self.gui.wavelength_entry.rebuild()
         except:
             # In the case of an error, the error window is displayed and the entry value is reset to the previous value
             #self.error_window()
-            self.gui.set_text(str(currentValue))
+            self.gui.wavelength_entry.set_text(str(currentValue))
