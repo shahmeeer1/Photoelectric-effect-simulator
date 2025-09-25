@@ -8,6 +8,9 @@ class SimulationDraw:
         self.gui = guimanager
         self.SimCore = simcore
         self.WIDTH, self.HEIGHT = dimensions
+        self.screen = screen
+
+        self._static_positions()
 
     
     def _static_positions(self):
@@ -21,16 +24,16 @@ class SimulationDraw:
     def draw_static(self):
 
         # Display static GUI elements on screen
-        self.screen.blit(self.background_image, (0, 0))
-        self.screen.blit(self.apparatus_image, self.apparatus_pos)
-        self.screen.blit(self.colour_spectrum, self.spectrum_pos)
-        self.screen.blit(self.output_labels, self.output_labels_pos)
-        self.screen.blit(self.light_intensity_label, self.intensity_label_pos)
+        self.screen.blit(self.gui.background_image, (0, 0))
+        self.screen.blit(self.gui.apparatus_image, self.apparatus_pos)
+        self.screen.blit(self.gui.colour_spectrum, self.spectrum_pos)
+        self.screen.blit(self.gui.output_labels, self.output_labels_pos)
+        self.screen.blit(self.gui.light_intensity_label, self.intensity_label_pos)
 
     def emit_particles(self, currentIntensity, delta_time):
 
-        self.emit_photons(currentIntensity, delta_time)
-        self.emit_electrons(delta_time)
+        self._emit_photons(currentIntensity, delta_time)
+        self._emit_electrons(delta_time)
 
     
     def _emit_photons(self,currentIntensity, delta_time):
