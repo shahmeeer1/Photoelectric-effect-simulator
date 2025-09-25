@@ -1,9 +1,10 @@
 <h1 align="center">
-<a><img src="https://github.com/shahmeeer1/Photoelectric-effect-simulator/blob/main/phet.png" width="200"></a>
-<br>
-Photoelectric Effect Simulator
-<br>
+  <img src="https://github.com/shahmeeer1/Photoelectric-effect-simulator/blob/main/phet.png" width="200">
+  <br>
+  Photoelectric Effect Simulator
+  <br>
 </h1>
+
 <h4 align="center">An experimental physics simulator built in Python</a>.</h4>
 
 <p align="center">
