@@ -16,11 +16,10 @@
 
 ## About The Project
 
-This project is an interactive simulator for the photoelectric effect built entirely in Python to visualize and analyze the photoelectric effect. 
-It serves as an educational tool designed to help students, educators, and physics enthusiasts visualize and understand the fundamental principles of the photoelectric effect in an engaging way.
+This project is an interactive simulator built entirely in python to allow easy demonstration of the photoelectric effect experiment.
+It serves as an educational tool designed to help students, educators and physics enthusiasts visualize and understand the fundamentals of the experiment in an engaging way.
 
-Users can conduct virtual experiments by selecting different metallic surfaces, adjusting the wavelength and intensity of incident light, and observing the resulting emission of photoelectrons. 
-The simulator provides real-time feedback on key physical quantities and includes robust data logging and analysis features.
+Users can simulate conducting the experiment by adjusting the wavelength and intensity of incident light, and observing the effect this has on the resulting emission of photoelectrons. The simulator provides real-time feedback on relevant physical quantities and includes data logging and analysis features.
 
 ## Features
 
