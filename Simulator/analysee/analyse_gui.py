@@ -7,17 +7,7 @@ from .i_vs_f import I_VS_F
 from .ke_vs_i import KE_VS_i
 from .I_vs_i import I_VS_i
 
-"""
-pygame and pygame_ui library used for gui
-sqlite3 used for database management
 
-# buttons is my own file
-
-
-some of the Overriding of __new__ method used from Stackoverflow.
-https://stackoverflow.com/a/1810367
-Lines: 716 - 710
-"""
 pygame.init()
 
 # class to display gui and control graph plotting
