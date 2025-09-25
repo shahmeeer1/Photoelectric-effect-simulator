@@ -65,7 +65,7 @@ Follow these steps to set up the project locally:
 
 Once the application launches, you can:
 *   Before starting the simulation, choose one or more metals to experiment with.
-*   Start the simulation to use the sliders and input boxes to adjust the incident light's wavelength and intensity.
+*   Start the simulation to conduct an experiment and gather results.
 *   Observe the animation and the real-time data output.
 *   Click "Record" to save the current experimental readings.
 *   Access the "View Data" section to review saved results.
