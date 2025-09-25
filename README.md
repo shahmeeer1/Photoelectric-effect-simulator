@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 </p>
 
-## 📖 About The Project
+## About The Project
 
 This project is an interactive simulator for the photoelectric effect built entirely in Python to visualize and analyze the photoelectric effect. 
 It serves as an educational tool designed to help students, educators, and physics enthusiasts visualize and understand the fundamental principles of the photoelectric effect in an engaging way.
@@ -22,7 +22,7 @@ It serves as an educational tool designed to help students, educators, and physi
 Users can conduct virtual experiments by selecting different metallic surfaces, adjusting the wavelength and intensity of incident light, and observing the resulting emission of photoelectrons. 
 The simulator provides real-time feedback on key physical quantities and includes robust data logging and analysis features.
 
-## ✨ Features
+## Features
 
 *   **Interactive Simulation:** Dynamically observe electron emission from different metals under varying light conditions.
 *   **Metal Selection:** Choose from a list of predefined metals, each with its unique work function.
@@ -38,14 +38,14 @@ The simulator provides real-time feedback on key physical quantities and include
 *   **Theoretical Background:** Access a dedicated section explaining the theory behind the photoelectric effect.
 *   **Intuitive GUI:** Built with Pygame for a responsive and engaging user experience.
 
-## 📚 Tech Stack
+## Tech Stack
 
 *   **Language:** Python
 *   **GUI Framework:** Pygame, Pygame-GUI
 *   **Data Storage:** SQLite (`.db` files)
 *   **UI Styling:** Custom JSON themes for Pygame-GUI
 
-## 🚀 Installation
+## Installation
 
 Follow these steps to set up the project locally:
 
@@ -65,12 +65,30 @@ Follow these steps to set up the project locally:
     python src/app.py
     ```
 
-## ▶️ Usage
+## Usage
 
 Once the application launches, you can:
-*   Navigate through the main menu.
-*   Start a simulation to select metals and adjust light properties.
-*   Record your experimental data.
+*   Before starting the simulation, choose one or more metals to experiment with.
+*   Start the simulation to use the sliders and input boxes to adjust the incident light's wavelength and intensity.
+*   Observe the animation and the real-time data output.
+*   Click "Record" to save the current experimental readings.
 *   Access the "View Data" section to review saved results.
 *   Use the "Analyse" section to generate graphs and perform regression analysis on your recorded data.
 *   Explore the "Theory" section for an educational overview of the photoelectric effect.
+
+## Project Structure
+```bash
+Photoelectric-effect-simulator/
+├── resources/                # All assets for the project
+│   ├── db/                   # SQLite database
+│   ├── images/               # UI images, buttons, and backgrounds
+│   └── styles/               # JSON theme files for pygame_gui
+└── src/                      # Source code
+    ├── analysis/             # Modules for data analysis and graph plotting
+    ├── core/                 # Core simulation logic (particles, metals)
+    ├── data/                 # Database setup and data saving logic
+    ├── gui/                  # All GUI components and windows
+    ├── state/                # State machine to manage application flow
+    ├── utils/                # Helper functions and utilities
+    └── app.py                # Main application entry point
+```
