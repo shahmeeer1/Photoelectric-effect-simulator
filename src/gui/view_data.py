@@ -2,22 +2,7 @@ import pygame
 import pygame_gui
 import threading
 import sqlite3
-import buttons
-
-"""
-pygame and pygame_gui used for GUI
-threading used for creating timer for button enabling and delay
-line: 64
-
-sqlite3 used for database management
-
-# buttons is my own library
-
-Overriding of __new__ method used from Stackoverflow.
-Lines: 41 - 44
-https://stackoverflow.com/a/1810367
-
-"""
+import gui.buttons as buttons
 
 
 pygame.init()
@@ -51,7 +36,7 @@ class ViewData:
 
         #   Create Game window
         self.screen = screen
-        pygame.display.set_caption('View Data')
+        pygame.display.set_caption('view_data')
 
         #   Load and scale images
         self.Load_images()
@@ -59,7 +44,7 @@ class ViewData:
         #   Draw Buttons
         self.CreateButtons()
 
-        self.conn = sqlite3.connect('Simulator/SimData.db')
+        self.conn = sqlite3.connect('resources/db/SimData.db')
         self.c = self.conn.cursor()
 
 
@@ -95,7 +80,7 @@ class ViewData:
         ]
 
         # Create pygame_gui manager
-        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
+        self.manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "resources/styles/ButtonTheme.JSON")
 
         # set dynamic button size
         buttons_size = (self.WIDTH * 0.0716, self.HEIGHT * 0.127)
@@ -113,19 +98,19 @@ class ViewData:
     def Load_images(self):
         # Load images including background images and button images
 
-        self.background_image = pygame.image.load('Resources/view data/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('resources/images/view_data/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
-        self.ButtonsRect_image = pygame.image.load('Resources/view data/ButtonsRect.png').convert_alpha()
+        self.ButtonsRect_image = pygame.image.load('resources/images/view_data/ButtonsRect.png').convert_alpha()
         self.ButtonsRect_image = pygame.transform.scale(self.ButtonsRect_image, (self.WIDTH * 0.724, self.HEIGHT * 0.77))
 
-        self.SortRect_image = pygame.image.load('Resources/view data/SortRect.png').convert_alpha()
+        self.SortRect_image = pygame.image.load('resources/images/view_data/SortRect.png').convert_alpha()
         self.SortRect_image = pygame.transform.scale(self.SortRect_image, (self.WIDTH * 0.18, self.HEIGHT * 0.77))
 
-        self.SortByTitle = pygame.image.load('Resources/view data/SortByTitle.png').convert_alpha()
+        self.SortByTitle = pygame.image.load('resources/images/view_data/SortByTitle.png').convert_alpha()
         self.SortByTitle = pygame.transform.scale(self.SortByTitle, (self.WIDTH * 0.1569, self.HEIGHT * 0.095))
 
-        self.ViewDataTitle = pygame.image.load('Resources/view data/ViewDataTitle.png').convert_alpha()
+        self.ViewDataTitle = pygame.image.load('resources/images/view_data/ViewDataTitle.png').convert_alpha()
         self.ViewDataTitle = pygame.transform.scale(self.ViewDataTitle, (self.WIDTH * 0.2448, self.HEIGHT * 0.058))
 
         button_names = [
@@ -135,7 +120,7 @@ class ViewData:
             "Mercury.png", "Sodium.png", "Uranium.png", "Zinc.png",
             "ShowAllButton.png", "DataInfoButton.png", "MetalsInfoButton.png"
         ]
-        image_paths = ['Resources/Select Metals Images/SelectButtons/' + i for i in button_names]
+        image_paths = ['resources/images/select_metal_images/select_buttons/' + i for i in button_names]
         self.images = self.load_button_images(image_paths, 1)  # Load all images in list
 
 
@@ -154,14 +139,6 @@ class ViewData:
 
     def Retrieve_results(self, name):
         # Method to retrieve results for specific metal from appropriate table
-        """
-            This cross table query will select from the table with the name of the metal,
-            the following values: wavelength, frequency, LightIntensity
-            Kinetic Energy, Current and PhotonEnergy given that the
-            UserID of the row in the metal table is the same as the
-            UserID associated with the user's username stored in the
-            credentials table.
-        """
         # retrieve results for a specific metal
         query = """
                 SELECT Wavelength, Frequency, LightIntensity,
@@ -174,53 +151,34 @@ class ViewData:
         data = self.c.fetchall()
         return data
 
-    """NEEDS TO BE REWORKED"""
+
     def RetrieveAll(self):
         # Method to retrieve results for all metals from appropriate tables
         data = [] # initialise 2d array which will store data
-        # List of metals
+        
+        metals = ['Aluminium', 'Beryllium', 'Caesium', 'Calcium', 'Cobalt', 'Gold', 'Iron', 'Lead', 'Mercury', 'Sodium', 'Uranium', 'Zinc']
 
-        """ 
-            This loop will make a query to each of the 12 tables. It will retrieve the 
-            following values: Wavelength, Frequency, LightIntensity, KineticEnergy, Current, PhotonEnergy
-            from the table given that the UserID of the row in the metal table is the same as the 
-            UserID associated with the user's username stored in the credentials table. this ensures that only the 
-            Users data is retrieved from the database and no one else's. 
-        """
+
         for metal in metals:
             query = """SELECT Wavelength, Frequency, LightIntensity, 
                                KineticEnergy, Current, PhotonEnergy 
-                               FROM {} as m, credentials as c 
-                               WHERE c.Username = ? and m.UserID = c.UserID;""".format(metal)
-            self.c.execute(query, (self.Username,))
+                               FROM results 
+                               WHERE MetalName = ?"""
+            self.c.execute(query, (metal,))
             data += self.c.fetchall()
+
         return data
 
-    """Rework to avoid unnecessary db queries potentially?"""
+
     def ApproximatePlanckConstant(self, metal_name):
         # Method to approximate a value for plancks constant (6.63e-34) using their gathered data
 
-        """
-            This query retrieves the average value of the frequency column where the UserID associated
-            with the username in the credentials table matches the UserId in the results row and that
-            the value for current in that row is > 0
-        """
-
-        query = """SELECT AVG(frequency) 
-                        FROM {} as m, credentials as c
-                        WHERE current > 0 and c.Username = ? and m.UserID = c.UserID;""".format(metal_name)
-
-        self.c.execute(query, (self.Username,))
-
-        # store the retrieved value for average frequency from the query
-        average_frequency = self.c.fetchone()[0]
-
-        # This query has the same conditions as the previous query but instead returns the average of the photonEnergy column
-        query = """SELECT AVG(PhotonEnergy) 
-                        FROM {} as m, credentials as c
-                        WHERE current > 0 and c.Username = ? and m.UserID = c.UserID;""".format(metal_name)
-        self.c.execute(query, (self.Username,))
-        average_energy = self.c.fetchone()[0]
+        query = """SELECT AVG(Frequency), AVG(PhotonEnergy)
+                    FROM results
+                    WHERE MetalName = ? AND Current > 0"""
+        
+        self.c.execute(query, (metal_name,))
+        average_frequency, average_energy = self.c.fetchone()
 
         if average_energy is not None and average_frequency is not None:
             # If values were retrieved for average Frequency and photon energy calculate a value for Planks constant
@@ -228,7 +186,7 @@ class ViewData:
         else:
             return "None"
 
-    """rework to updated database schema"""
+
     def RetrieveMetalData(self):
         # Method to retrieve data about the metals from the 'metals' table
         new_metal_data = []

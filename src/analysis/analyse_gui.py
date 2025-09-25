@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
-import buttons
-import analysee.graphTemplate as gt
+import gui.buttons as buttons
+import analysis.graphTemplate as gt
 from .ke_vs_f import KE_VS_F
 from .i_vs_f import I_VS_F
 from .ke_vs_i import KE_VS_i
@@ -47,35 +47,35 @@ class analyse_gui:
     # Method to set up GUI elements
     def SetupGui(self):
         # Create a UIManager to manage UI elements from the pygame_ui library
-        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
+        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "resources/styles/ButtonTheme.JSON")
 
         # Define the container rectangle for the scrollable container
         container_Rect = pygame.Rect(self.WIDTH * 0.033, self.HEIGHT * 0.15, self.WIDTH * 0.2, self.HEIGHT * 0.579)
         self.scrollable_container = pygame_gui.elements.UIScrollingContainer(container_Rect, self.ui_manager)
 
         # Load and scale images for background, and buttons
-        self.background_image = pygame.image.load('Resources/view data/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('resources/images/view_data/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
-        self.MetalsRect_image = pygame.image.load('Resources/analyse/MetalsRect.png').convert_alpha()
+        self.MetalsRect_image = pygame.image.load('resources/images/analyse/MetalsRect.png').convert_alpha()
         self.MetalsRect_image = pygame.transform.scale(self.MetalsRect_image,
                                                        (self.WIDTH * 0.2064, self.HEIGHT * 0.764))
 
-        self.MetalsTitle_image = pygame.image.load('Resources/analyse/metalstitle.png').convert_alpha()
+        self.MetalsTitle_image = pygame.image.load('resources/images/analyse/metalstitle.png').convert_alpha()
         self.MetalsTitle_image = pygame.transform.scale(self.MetalsTitle_image,
                                                         (self.WIDTH * 0.157, self.HEIGHT * 0.065))
 
-        self.GraphButtonRect = pygame.image.load('Resources/analyse/GraphsButtonsRect.png').convert_alpha()
+        self.GraphButtonRect = pygame.image.load('resources/images/analyse/GraphsButtonsRect.png').convert_alpha()
         self.GraphButtonRect = pygame.transform.scale(self.GraphButtonRect, (self.WIDTH * 0.284, self.HEIGHT * 0.228))
 
-        self.AnalyseTitle_image = pygame.image.load('Resources/analyse/AnalyseTitle.png').convert_alpha()
+        self.AnalyseTitle_image = pygame.image.load('resources/images/analyse/AnalyseTitle.png').convert_alpha()
         self.AnalyseTitle_image = pygame.transform.scale(self.AnalyseTitle_image,
                                                          (self.WIDTH * 0.157, self.HEIGHT * 0.08))
 
-        self.GraphTitle_image = pygame.image.load('Resources/analyse/DrawGraphTitle.png').convert_alpha()
+        self.GraphTitle_image = pygame.image.load('resources/images/analyse/DrawGraphTitle.png').convert_alpha()
         self.GraphTitle_image = pygame.transform.scale(self.GraphTitle_image, (self.WIDTH * 0.2031, self.HEIGHT * 0.06))
 
-        self.QuitButton_image = pygame.image.load('Resources/ButtonImages/QuitButton.png').convert_alpha()
+        self.QuitButton_image = pygame.image.load('resources/images/buttons/QuitButton.png').convert_alpha()
         self.QuitButton = buttons.Button(0.02479, 0.84, 0.1758, 0.1146, self.QuitButton_image, self.WIDTH, self.HEIGHT)
 
         # Initialise lists to store metal buttons and graph buttons

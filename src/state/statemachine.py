@@ -1,13 +1,15 @@
 import pygame
-"""
-pygame used for gui
+
+from gui.menu_gui import Menu
+from gui.select_metals import SelectMetals
+from gui.simulator_window import Simulation
+from gui.theory import Theory
+from gui.view_data import ViewData
+from analysis.analyse_gui import analyse_gui
+from data.save_results import SaveData
+from data.database_setup import database_setup
 
 
-Overriding of __new__ method used from Stackoverflow.
-Lines: 32 - 35
-https://stackoverflow.com/a/1810367
-
-"""
 #   Initialise pygame
 pygame.init()
 
@@ -57,15 +59,15 @@ class GuiInitialise(State):
     def Transition(self, input):
         return MenuState()
 
-
+#TODO: Enable graceful exit from all states
 #   State representing main menu
 class MenuState(State):
 
     #   Launches menu screen gui
     def Current(self):
-        import MenuGui
-        Menu = MenuGui.Menu(GuiInitialise.GetScreen()).draw_menu()
-        return Menu
+
+        Menus = Menu(GuiInitialise.GetScreen()).draw_menu()
+        return Menus
 
     #   Transitions to different states based on menu selection
     def Transition(self, input):
@@ -96,8 +98,7 @@ class SelectMetalsState(State):
     #   Launches select metals screen
     def Current(self):
         #TODO: SHOULD NOT INJECT DATA INTO STATE
-        import SelectMetals
-        page = SelectMetals.SelectMetals(GuiInitialise.GetScreen())
+        page = SelectMetals(GuiInitialise.GetScreen())
         option, SelectMetalsState.__SelectedMetals = page.draw_page()
         return option
 
@@ -112,9 +113,8 @@ class SelectMetalsState(State):
 #   State for running simulator
 class SimulatorState(State):
     def Current(self):
-        import sim.Simulator as Simulator
         #   Screen and list of selected metals passed as arguments
-        Sim = Simulator.Simulation(SelectMetalsState.GetSelectedMetals(), GuiInitialise.GetScreen())
+        Sim = Simulation(SelectMetalsState.GetSelectedMetals(), GuiInitialise.GetScreen())
         option = Sim.draw_sim()
         return option
 
@@ -132,9 +132,8 @@ class SimulatorState(State):
 class SaveResultsState(State):
     def Current(self):
         #TODO: SHOULD NOT INJECT DATA INTO STATE
-        import SaveResults
         #   selected metals list 
-        save = SaveResults.SaveData(SelectMetalsState.GetSelectedMetals())
+        save = SaveData(SelectMetalsState.GetSelectedMetals())
         return save
 
     #   Returns to menu screen
@@ -147,9 +146,8 @@ class SaveResultsState(State):
 class ViewDataState(State):
     def Current(self):
         #TODO: SHOULD NOT INJECT DATA INTO STATE
-        import ViewData
 
-        view = ViewData.ViewData(GuiInitialise.GetScreen())
+        view = ViewData(GuiInitialise.GetScreen())
         option = view.draw_page()
         return option
 
@@ -163,7 +161,6 @@ class ViewDataState(State):
 class AnalyseState(State):
     #TODO: SHOULD NOT INJECT DATA INTO STATE
     def Current(self):
-        import analysee.analyse_gui as analyse_gui
 
         analysis = analyse_gui(GuiInitialise.GetScreen())
         option = analysis.draw_page()
@@ -177,8 +174,7 @@ class AnalyseState(State):
 class TheoryState(State):
 
     def Current(self):
-        import Theory
-        t = Theory.Theory(GuiInitialise.GetScreen())
+        t = Theory(GuiInitialise.GetScreen())
         option = t.draw_page()
         return option
 
@@ -196,8 +192,7 @@ class TheoryState(State):
 """
 class Initialise(State):
     def Current(self):
-        import DatabaseSetup
-        dbsetup = DatabaseSetup.database_setup().Database_Status()
+        dbsetup = database_setup().Database_Status()
         return dbsetup
 
     def Transition(self, input):
@@ -215,7 +210,7 @@ class StateMachine:
         self.CurrentState = Initialise()
 
     #   Executes the main loop of the programme and handles state transitions
-    def run_state(self):
+    def run(self):
 
         """
             Checks if a current state is active and the boolean False has not been returned
@@ -237,4 +232,4 @@ class StateMachine:
 
 if __name__ == "__main__":
     sim = StateMachine()
-    sim.run_state()
+    sim.run()

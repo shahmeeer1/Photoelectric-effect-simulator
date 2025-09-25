@@ -1,17 +1,14 @@
 import pygame
 import pygame_gui
-import buttons
-import re
-
-import sim.Particles as Particles
-import sim.simulator_utility as SimUtility
-from sim.simulator_core import simulator_core as SimCore
-from sim.GUIManager import GUIManager
-from sim.gui_validation import GUIValidation
-from sim.simulation_draw import SimulationDraw
+import gui.buttons as buttons
 
 
-#TODO: finish refactoring file. gui elements are tied to self.gui (GUIManager)
+from core.simulator_core import simulator_core as SimCore
+from gui.gui_manager import GUIManager
+from gui.gui_validation import GUIValidation
+from gui.simulation_draw import SimulationDraw
+
+
 
 """
 pygame and pygame_gui libraries used for gui

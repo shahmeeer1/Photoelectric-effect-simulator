@@ -1,6 +1,6 @@
 import pygame
 import pygame_gui
-import buttons
+import gui.buttons as buttons
 
 """
 pygame and pygame_gui used for GUI
@@ -36,29 +36,29 @@ class Theory:
         pygame.display.set_caption('Theory')
 
         # Load simulator images
-        self.background_image = pygame.image.load('Resources/view data/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('resources/images/view_data/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
-        self.bgrect_image = pygame.image.load('Resources/TheoryImages/backgroundrect.png').convert_alpha()
+        self.bgrect_image = pygame.image.load('resources/images/theory_images/backgroundrect.png').convert_alpha()
         self.bgrect_image = pygame.transform.scale(self.bgrect_image, self.scaleT((1477, 760)))
 
-        self.Title_image = pygame.image.load('Resources/TheoryImages/TheoryTitle.png').convert_alpha()
+        self.Title_image = pygame.image.load('resources/images/theory_images/TheoryTitle.png').convert_alpha()
         self.Title_image = pygame.transform.scale(self.Title_image, self.scaleT((241, 82)))
 
-        self.page1_image = pygame.image.load('Resources/TheoryImages/page1.png').convert_alpha()
+        self.page1_image = pygame.image.load('resources/images/theory_images/page1.png').convert_alpha()
         self.page1_image = pygame.transform.scale(self.page1_image, self.scaleT((1420, 719)))
 
-        self.page2_image = pygame.image.load('Resources/TheoryImages/page2.png').convert_alpha()
+        self.page2_image = pygame.image.load('resources/images/theory_images/page2.png').convert_alpha()
         self.page2_image = pygame.transform.scale(self.page2_image, self.scaleT((1420, 637)))
 
-        self.image1 = pygame.image.load('Resources/TheoryImages/PEimg1.png').convert_alpha()
+        self.image1 = pygame.image.load('resources/images/theory_images/PEimg1.png').convert_alpha()
         self.image1 = pygame.transform.scale(self.image1, self.scaleT((273, 184)))
 
         # Create simulator buttons
-        self.QuitButton_image = pygame.image.load('Resources/ButtonImages/QuitButton.png').convert_alpha()
+        self.QuitButton_image = pygame.image.load('resources/images/buttons/QuitButton.png').convert_alpha()
         self.QuitButton = buttons.Button(0.82, 0.84, 0.1758, 0.1146, self.QuitButton_image, self.WIDTH, self.HEIGHT)
 
-        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "Resources/Styling/ButtonTheme.JSON")
+        self.ui_manager = pygame_gui.UIManager((int(self.WIDTH), int(self.HEIGHT)), "resources/styles/ButtonTheme.JSON")
         self.page1_button = pygame_gui.elements.UIButton(pygame.Rect(self.scaleT((1319, 542)), self.scaleT((118, 50))), "Page 1", manager= self.ui_manager, object_id= "#ViewData")
         self.page2_button = pygame_gui.elements.UIButton(pygame.Rect(self.scaleT((1319, 617)), self.scaleT((118, 50))), "Page 2", manager= self.ui_manager, object_id= "#ViewData")
 
