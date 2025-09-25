@@ -23,7 +23,6 @@ Users can simulate conducting the experiment by adjusting the wavelength and int
 
 ## Features
 
-*   **Interactive Simulation:** Dynamically observe electron emission from different metals under varying light conditions.
 *   **Metal Selection:** Choose from a list of predefined metals, each with its unique work function.
 *   **Adjustable Light Properties:** Control the frequency (color) and intensity of incident light.
 *   **Real-time Output:** View calculated values such as kinetic energy of emitted electrons and photocurrent.
@@ -34,7 +33,6 @@ Users can simulate conducting the experiment by adjusting the wavelength and int
     *   Current vs. Intensity
     *   Kinetic Energy vs. Intensity
 *   **Regression Analysis:** Perform linear regression on generated data to extract physical constants (e.g., Planck's constant).
-*   **Theoretical Background:** Access a dedicated section explaining the theory behind the photoelectric effect.
 *   **Intuitive GUI:** Built with Pygame for a responsive and engaging user experience.
 
 ## Tech Stack
