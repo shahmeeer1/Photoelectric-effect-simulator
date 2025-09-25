@@ -40,7 +40,6 @@ Users can simulate conducting the experiment by adjusting the wavelength and int
 *   **Language:** Python
 *   **GUI Framework:** Pygame, Pygame-GUI
 *   **Data Storage:** SQLite (`.db` files)
-*   **UI Styling:** Custom JSON themes for Pygame-GUI
 
 ## Installation
 
