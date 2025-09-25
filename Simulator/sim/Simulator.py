@@ -11,8 +11,7 @@ from sim.gui_validation import GUIValidation
 from sim.simulation_draw import SimulationDraw
 
 
-import random
-import threading
+#TODO: finish refactoring file. gui elements are tied to self.gui (GUIManager)
 
 """
 pygame and pygame_gui libraries used for gui
@@ -85,21 +84,15 @@ class Simulation:
 
     """Both"""  #   POSSIBLE EXTRACTION
     def update_output(self, currentWavelength):
-        # Calculate the frequency of the photon using the given current wavelength
-        frequency = self.SimCore.Photons.calc_frequency(currentWavelength)
-        # Calculate the energy of the photon
-        photon_energy = self.SimCore.Photons.calc_photon_energy()
-        # Calculate the kinetic energy of the electrons using the photon energy
-        kinetic_energy = self.SimCore.Electrons.calc_kinetic_energy(photon_energy)
-        # If the kinetic energy is zero, set the current to zero and update the output box accordingly
-        if kinetic_energy == 0:
-            self.SimCore.Electrons.current = 0
-            self.current_outputbox.set_text("<strong>{} mA</strong>".format(self.SimCore.Electrons.current))
+        freq, pe, ke, crnt = self.SimCore.update_output(currentWavelength)
+
+        if ke == 0:
+            self.gui.current_outputbox.set_text("<strong>{} mA</strong>".format(crnt))
 
         # Update the output boxes with the values calculated above
-        self.kinetic_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(kinetic_energy,2)))
-        self.frequency_outputbox.set_text("<strong>{} THz</strong>".format(round(frequency,2)))
-        self.photon_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(photon_energy,2)))
+        self.gui.kinetic_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(ke,2)))
+        self.gui.frequency_outputbox.set_text("<strong>{} THz</strong>".format(round(freq,2)))
+        self.gui.photon_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(pe,2)))
 
     """Both"""  #   POSSIBLE EXTRACTION
     def update_current(self, currentIntensity):
@@ -108,7 +101,7 @@ class Simulation:
         # Calculate the current of the electrons using the threshold energy, photons, and current intensity
         self.SimCore.Electrons.current = self.SimCore.Electrons.calc_current(threshold_energy, self.SimCore.Photons, currentIntensity)
         # Update the current output box with the calculated current value
-        self.current_outputbox.set_text("<strong>{} mA</strong>".format(self.SimCore.Electrons.current))
+        self.gui.current_outputbox.set_text("<strong>{} mA</strong>".format(self.SimCore.Electrons.current))
         # Calculate the proportion of electrons based on the current and update the electrons_proportion attribute
         self.SimCore.Electrons.electrons_proportion = self.SimCore.Electrons.min_max(self.SimCore.Electrons.current, self.SimCore.Electrons.min_current,
                                                                      self.SimCore.Electrons.max_current)
@@ -122,9 +115,9 @@ class Simulation:
         else:
             # If electrons cannot be emitted, set kinetic energy and current to zero, and update output boxes
             self.SimCore.Electrons.kinetic_energy = 0
-            self.kinetic_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(self.SimCore.Electrons.kinetic_energy, 2)))
+            self.gui.kinetic_energy_outputbox.set_text("<strong>{} eV</strong>".format(round(self.SimCore.Electrons.kinetic_energy, 2)))
             self.SimCore.Electrons.current = 0
-            self.current_outputbox.set_text("<strong>{} mA</strong>".format(self.SimCore.Electrons.current))
+            self.gui.current_outputbox.set_text("<strong>{} mA</strong>".format(self.SimCore.Electrons.current))
 
     """Gui related"""
     def View_readings(self):
@@ -184,16 +177,16 @@ class Simulation:
 
         # Restrict user interaction with buttons below window
         window.set_blocking(True)
-        self.quit_button.DisableAll()
+        self.gui.quit_button.DisableAll()
 
     """Both"""  #  POSSIBLE EXTRACTION
     def reset_sim(self, currentWavelength, currentIntensity):
         # reset the entire simulator by updating all values at the same time
         # This will return the simulators inputs and outputs to the same state they were...
         # ...in at instantiation
-        self.intensity_outputbox.set_text("<strong>{}%</strong>".format(currentIntensity))
-        self.light_intensity_slider.set_current_value(currentIntensity)
-        self.self.validation.return_to_valid_state(currentWavelength)
+        self.gui.intensity_outputbox.set_text("<strong>{}%</strong>".format(currentIntensity))
+        self.gui.light_intensity_slider.set_current_value(currentIntensity)
+        self.validation.return_to_valid_state(currentWavelength)
         self.update_output(currentWavelength)
         self.update_current(currentIntensity)
         self.SimCore.Photons.colour = self.SimCore.Photons.wavelength_to_rgb(currentWavelength)
@@ -210,7 +203,7 @@ class Simulation:
 
 
         # Set initial text for GUI elements
-        self.wavelength_entry.set_text(str(currentWavelength))
+        self.gui.wavelength_entry.set_text(str(currentWavelength))
         self.update_output(currentWavelength)
         self.Emit_Electrons(currentIntensity)
 
@@ -223,13 +216,11 @@ class Simulation:
             # draw statiic elements of screen
             self.simDraw.draw_static()
 
-
-
             #   =========== Draw Buttons ===============
-            advance = self.advance_button.draw(self.screen)
-            quit = self.quit_button.draw(self.screen)
-            record = self.record_button.draw(self.screen)
-            view = self.view_button.draw(self.screen)
+            advance = self.gui.advance_button.draw(self.screen)
+            quit = self.gui.quit_button.draw(self.screen)
+            record = self.gui.record_button.draw(self.screen)
+            view = self.gui.view_button.draw(self.screen)
 
             # ============= Button logic ================
             if record:
@@ -269,13 +260,13 @@ class Simulation:
 
                 #   User updates wavelength by moving slider
                 if event.type == pygame_gui.UI_HORIZONTAL_SLIDER_MOVED:
-                    if event.ui_element == self.spectrum_slider:
+                    if event.ui_element == self.gui.spectrum_slider:
                         #   check that slider has moved and not just been held down
                         if round(event.value,2) != currentWavelength:
                             #   round the new slider value to 2 dp.
                             currentWavelength = round(event.value, 2)
                             #   update the value of the wavelength entry
-                            self.wavelength_entry.set_text(str(currentWavelength))
+                            self.gui.wavelength_entry.set_text(str(currentWavelength))
                             # Update photons colour
                             self.SimCore.Photons.colour = self.SimCore.Photons.wavelength_to_rgb(currentWavelength)
                             # Calculate new values of other outputs (frequency, kinetic energy etc.)
@@ -283,12 +274,12 @@ class Simulation:
                             # Check if electrons can be emitted
                             self.Emit_Electrons(currentIntensity)
 
-                    elif event.ui_element == self.light_intensity_slider:
+                    elif event.ui_element == self.gui.light_intensity_slider:
                         #   check that value has changed
                         if event.value != currentIntensity:
                             currentIntensity = event.value
                             #   update intensity outputbox
-                            self.intensity_outputbox.set_text("<strong>{}%</strong>".format(currentIntensity))
+                            self.gui.intensity_outputbox.set_text("<strong>{}%</strong>".format(currentIntensity))
                             # Update other output values (frequency, kinetic energy etc.)
                             self.update_output(currentWavelength)
                             # Check if electrons can be emitted
@@ -297,11 +288,11 @@ class Simulation:
                 #   User inputs wavelength value
                 if event.type == pygame_gui.UI_TEXT_ENTRY_FINISHED and event.ui_object_id == "#Wavelength":
                     #   retrieve inputted value from wavelength entry box
-                    inputted_value = self.wavelength_entry.get_text()
+                    inputted_value = self.gui.wavelength_entry.get_text()
                     #   check if the value is valid
                     if self.validation.wavelength_validation(currentWavelength, inputted_value):
                         #   update the slider to the new wavelength value
-                        self.self.validation.update_spectrum_slider(currentWavelength, inputted_value)
+                        self.validation.update_spectrum_slider(currentWavelength, inputted_value)
                         #   update the new currentValue
                         currentWavelength = float(inputted_value)
                         # Update photons colour
@@ -312,15 +303,15 @@ class Simulation:
                         self.Emit_Electrons(currentIntensity)
                     else:
                         #   return wavelength entry to initial value before invalid input
-                        self.wavelength_entry.set_text(str(currentWavelength))
+                        self.gui.wavelength_entry.set_text(str(currentWavelength))
                         # Reset wavelength entry box after inputting value
-                        self.wavelength_entry.rebuild()
-                        self.wavelength_entry.unfocus()
+                        self.gui.wavelength_entry.rebuild()
+                        self.gui.wavelength_entry.unfocus()
                         #   display error
                         print("Invalid input")
                         self.error_window()
                 elif event.type == pygame_gui.UI_WINDOW_CLOSE:
-                    self.quit_button.EnableAll()
+                    self.gui.quit_button.EnableAll()
 
         # Update pygame and pygame_gui managers and window
                 self.gui.manager.process_events(event)
