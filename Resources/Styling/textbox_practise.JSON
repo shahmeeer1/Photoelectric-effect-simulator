@@ -46,7 +46,7 @@
   },
   "#KineticEnergy": {
     "font": {
-      "size": 20
+      "size": 14
     },
     "misc": {
       "padding": "0,10",

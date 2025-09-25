@@ -1,6 +1,6 @@
 import pygame
 import buttons
-import DQS
+import sim.DQS as DQS
 import Metals
 import threading
 
