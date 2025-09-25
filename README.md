@@ -1,5 +1,9 @@
-<h1 align="center"> Photoelectric Effect Simulator </h1>
-<a href="http://www.amitmerchant.com/electron-markdownify"><img src="https://raw.githubusercontent.com/amitmerchant1990/electron-markdownify/master/app/img/markdownify.png" alt="Markdownify" width="200"></a>
+<h1 align="center">
+<a><img src="https://github.com/shahmeeer1/Photoelectric-effect-simulator/blob/main/phet.png" width="200"></a>
+<br>
+Photoelectric Effect Simulator
+<br>
+</h1>
 <h4 align="center">An experimental physics simulator built in Python</a>.</h4>
 
 <p align="center">
