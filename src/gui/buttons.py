@@ -20,7 +20,7 @@ class Button:
 
         self.clicked = False
         # Base of button
-        self.base = pygame.image.load('Resources/ButtonImages/ButtonBase.png').convert_alpha()
+        self.base = pygame.image.load('resources/images/buttons/ButtonBase.png').convert_alpha()
         self.base = pygame.transform.scale(self.base, (self.width, self.height))
         self.FalseTrigger = False
         self.Disable = False

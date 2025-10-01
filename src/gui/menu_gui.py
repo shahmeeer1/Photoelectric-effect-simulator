@@ -1,5 +1,5 @@
 import pygame
-import buttons
+import gui.buttons as buttons
 import threading
 """
 pygame used for gui
@@ -35,17 +35,17 @@ class Menu:
         pygame.display.set_caption("Menu")
 
         # Load and scale background image
-        self.background_image = pygame.image.load('Resources/ButtonImages/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('resources/images/buttons/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
         # Load and scale menu title image
-        self.menu_title = pygame.image.load('Resources/ButtonImages/title.png').convert_alpha()
+        self.menu_title = pygame.image.load('resources/images/buttons/title.png').convert_alpha()
         self.menu_title = pygame.transform.scale(self.menu_title, (self.WIDTH * 0.321, self.HEIGHT * 0.178))
 
         # Create buttons
         button_names = ['StartButton.png', 'DataButton.png', 'AnalyseButton.png', 'TheoryButton.png',
                         'QuitButton.png']
-        image_paths = ['Resources/ButtonImages/' + i for i in button_names]
+        image_paths = ['resources/images/buttons/' + i for i in button_names]
         images = self.load_button_images(image_paths, 1)  # Load all images in list
 
         self.start_button = buttons.Button(0.4, 0.309, 0.1875, 0.1065, images[0], self.WIDTH, self.HEIGHT)

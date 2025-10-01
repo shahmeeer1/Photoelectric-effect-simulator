@@ -1,5 +1,5 @@
 import random
-from sim.simulator_core import simulator_core as SimCore
+from core.simulator_core import simulator_core as SimCore
 import pygame
 
 class SimulationDraw:

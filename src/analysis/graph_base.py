@@ -19,7 +19,7 @@ class Graph:
         self.y_var = ""
 
         # Connect to database
-        self.conn = sqlite3.connect('Simulator/SimData.db')
+        self.conn = sqlite3.connect('resources/db/SimData.db')
         self.c = self.conn.cursor()
 
     def CalculateCoordinates(self):

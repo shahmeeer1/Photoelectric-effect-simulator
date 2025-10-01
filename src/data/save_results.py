@@ -8,7 +8,7 @@ def SaveData(Metals):
 
     try:
         #   Create Database connection and cursor
-        connect = sqlite3.connect('Simulator/SimData.db')
+        connect = sqlite3.connect('resources/db/SimData.db')
         cursor = connect.cursor()
 
         #   List comprehension to remove empty elements from list

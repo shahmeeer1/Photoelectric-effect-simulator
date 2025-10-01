@@ -1,20 +1,8 @@
 import pygame
-import buttons
-import sim.DQS as DQS
-import Metals
+import gui.buttons as buttons
+import utils.dqs as DQS
+import core.metals as Metals
 import threading
-
-"""
-pygame used for GUI
-# buttons. DQS, Metals are my own libraries
-Threading used for creating timer for enabling and disabling buttons
-lines: 89 - 90
-
-
-Overriding of __new__ method used from Stackoverflow.
-Lines: 39 - 42
-https://stackoverflow.com/a/1810367
-"""
 
 
 pygame.init()
@@ -59,23 +47,23 @@ class SelectMetals:
         pygame.display.set_caption("Select Metals")
 
         #   Load and scale background image
-        self.background_image = pygame.image.load('Resources/ButtonImages/MenuBackground.png').convert_alpha()
+        self.background_image = pygame.image.load('resources/images/buttons/MenuBackground.png').convert_alpha()
         self.background_image = pygame.transform.scale(self.background_image, (self.WIDTH, self.HEIGHT))
 
         #   Load and scale menu title image
-        self.page_title = pygame.image.load('Resources/Select Metals Images/Title.png').convert_alpha()
+        self.page_title = pygame.image.load('resources/images/select_metal_images/Title.png').convert_alpha()
         self.page_title = pygame.transform.scale(self.page_title, (self.WIDTH * 0.5156, self.HEIGHT * 0.10532))
 
         #   Load and scale background rectangle
-        self.background_rect = pygame.image.load('Resources/Select Metals Images/BaseRect.png').convert_alpha()
+        self.background_rect = pygame.image.load('resources/images/select_metal_images/BaseRect.png').convert_alpha()
         self.background_rect = pygame.transform.scale(self.background_rect, (self.WIDTH * 0.91146, self.HEIGHT * 0.816))
 
         #   Load and scale text
-        self.selected_text = pygame.image.load('Resources/Select Metals Images/SelectedText.png').convert_alpha()
+        self.selected_text = pygame.image.load('resources/images/select_metal_images/SelectedText.png').convert_alpha()
         self.selected_text = pygame.transform.scale(self.selected_text, (self.WIDTH * 0.12044, self.HEIGHT * 0.03935))
 
         #   Loaf and scale selection bar
-        self.selection_bar = pygame.image.load('Resources/Select Metals Images/SelectionBar.png').convert_alpha()
+        self.selection_bar = pygame.image.load('resources/images/select_metal_images/SelectionBar.png').convert_alpha()
         self.selection_bar = pygame.transform.scale(self.selection_bar, (self.WIDTH * 0.86458, self.HEIGHT * 0.1169))
 
         #   Create Buttons
@@ -85,7 +73,7 @@ class SelectMetals:
             "Cobalt.png", "Gold.png", "Iron.png", "Lead.png",
             "Mercury.png", "Sodium.png", "Uranium.png", "Zinc.png"
         ]
-        image_paths = ['Resources/Select Metals Images/SelectButtons/' + i for i in button_names]
+        image_paths = ['resources/images/select_metal_images/select_buttons/' + i for i in button_names]
         images = self.load_button_images(image_paths, 1)  # Load all images in list
 
         self.advance_button = buttons.Button(0.7663, 0.8681, 0.1868, 0.09722, images[0], self.WIDTH, self.HEIGHT)
